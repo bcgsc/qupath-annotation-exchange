@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="AnnotationExchangeExtension:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/AnnotationExchangeExtension_jar</output-path>
+    <root id="archive" name="AnnotationExchangeExtension.jar">
+      <element id="module-output" name="AnnotationExchangeExtension" />
+    </root>
+  </artifact>
+</component>
