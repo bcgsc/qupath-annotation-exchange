@@ -1,30 +1,20 @@
 package qupath.AnnotationExchangeExtension;
 
 import com.google.gson.*;
-import com.google.gson.stream.JsonReader;
-import jdk.nashorn.internal.ir.debug.JSONWriter;
-import qupath.lib.classifiers.PathClassificationLabellingHelper;
 import qupath.lib.common.ColorTools;
 import qupath.lib.geom.Point2;
 import qupath.lib.images.ImageData;
 import qupath.lib.objects.*;
-import qupath.lib.objects.classes.PathClassFactory;
 import qupath.lib.objects.helpers.PathObjectTools;
-import qupath.lib.objects.hierarchy.PathObjectHierarchy;
 import qupath.lib.plugins.AbstractPlugin;
 import qupath.lib.plugins.PluginRunner;
-import qupath.lib.roi.LineROI;
 import qupath.lib.roi.PathROIToolsAwt;
-import qupath.lib.roi.PointsROI;
 import qupath.lib.roi.PolygonROI;
-import qupath.lib.roi.interfaces.PathArea;
 import qupath.lib.roi.interfaces.PathShape;
 
-import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.util.*;

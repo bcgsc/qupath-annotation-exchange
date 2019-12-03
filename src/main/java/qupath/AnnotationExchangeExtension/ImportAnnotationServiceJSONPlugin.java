@@ -7,7 +7,6 @@ import com.google.gson.stream.JsonReader;
 import qupath.lib.images.ImageData;
 import qupath.lib.objects.*;
 import qupath.lib.objects.classes.PathClassFactory;
-import qupath.lib.objects.helpers.PathObjectTools;
 import qupath.lib.objects.hierarchy.PathObjectHierarchy;
 import qupath.lib.plugins.AbstractPlugin;
 import qupath.lib.plugins.PluginRunner;
