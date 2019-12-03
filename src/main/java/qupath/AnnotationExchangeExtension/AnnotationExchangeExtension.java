@@ -4,11 +4,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.Tooltip;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import qupath.lib.gui.QuPathGUI;
+import qupath.lib.gui.commands.interfaces.PathCommand;
 import qupath.lib.gui.extensions.QuPathExtension;
 import qupath.lib.gui.icons.PathIconFactory;
 
@@ -18,6 +20,31 @@ public class AnnotationExchangeExtension implements QuPathExtension{
 
     final private static Logger logger = LoggerFactory.getLogger(AnnotationExchangeExtension.class);
 
+    /**
+     * Returns an instance of a MenuItem using the `QuPathGUI.createMenuItem` function, which requires a call to
+     * `QuPathGUI.createCommandAction`
+     *
+     * @param pathCommand An instance of the class to execute when the user clicks the corresponding menu item
+     * @param menuItemName The name of the menu item that will be displayed to the user
+     * @return Processed MenuItem from QuPathGUI.createMenuItem
+     */
+    private static MenuItem addQuPathMenuItem(
+            PathCommand pathCommand,
+            String menuItemName
+    ) {
+        return QuPathGUI.createMenuItem(
+                QuPathGUI.createCommandAction(
+                        pathCommand,
+                        menuItemName,
+                        PathIconFactory.createNode(
+                            QuPathGUI.iconSize,
+                            QuPathGUI.iconSize,
+                            PathIconFactory.PathIcons.ANNOTATIONS
+                        ),
+                        null
+                )
+        );
+    };
 
     public static void addQuPathCommands(final QuPathGUI qupath) {
         ImportXMLAnnotation importXMLAnnotation = new ImportXMLAnnotation(qupath);
@@ -34,9 +61,9 @@ public class AnnotationExchangeExtension implements QuPathExtension{
             btnAnnotationExchange.setTooltip(new Tooltip("LMD Contour Export"));
             ContextMenu popup = new ContextMenu();
             popup.getItems().addAll(
-                QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(importXMLAnnotation, "Import XML Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null)),
-                QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(importJSONAnnotation, "Import JSON Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null)),
-                QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(exportJSONAnnotation, "Export JSON Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null))
+                addQuPathMenuItem(importXMLAnnotation, "Import XML Annotation"),
+                addQuPathMenuItem(importJSONAnnotation, "Import JSON Annotation"),
+                addQuPathMenuItem(exportJSONAnnotation, "Export JSON Annotation")
             );
             btnAnnotationExchange.setOnMouseClicked(e -> {
                 popup.show(btnAnnotationExchange, e.getScreenX(), e.getScreenY());
@@ -53,9 +80,9 @@ public class AnnotationExchangeExtension implements QuPathExtension{
         Menu menuExtension = qupath.getMenu("Extensions>Annotations Exchange", true);
         QuPathGUI.addMenuItems(
             menuExtension,
-            QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(importXMLAnnotation, "Import XML Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null)),
-            QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(importJSONAnnotation, "Import JSON Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null)),
-            QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(exportJSONAnnotation, "Export JSON Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null))
+            addQuPathMenuItem(importXMLAnnotation, "Import XML Annotation"),
+            addQuPathMenuItem(importJSONAnnotation, "Import JSON Annotation"),
+            addQuPathMenuItem(exportJSONAnnotation, "Export JSON Annotation")
         );
     }
 
