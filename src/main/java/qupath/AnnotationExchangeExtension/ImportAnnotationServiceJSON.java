@@ -28,9 +28,16 @@ import java.io.FileReader;
 public class ImportAnnotationServiceJSON implements PathCommand{
 
 
-        private QuPathGUI qupath;
-        final private static Logger logger = LoggerFactory.getLogger(ImportAnnotationServiceJSON.class);
+    private QuPathGUI qupath;
+    final private static Logger logger = LoggerFactory.getLogger(ImportAnnotationServiceJSON.class);
+    private final String commandName = "Import JSON Annotation";
 
+    /**
+     * @return Returns the commandName assigned to this class
+     */
+    public String commandName() {
+        return commandName;
+    }
 
     public ImportAnnotationServiceJSON(QuPathGUI qupath){
 

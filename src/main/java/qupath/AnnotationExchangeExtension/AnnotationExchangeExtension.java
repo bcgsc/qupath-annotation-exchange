@@ -61,9 +61,9 @@ public class AnnotationExchangeExtension implements QuPathExtension{
             btnAnnotationExchange.setTooltip(new Tooltip("LMD Contour Export"));
             ContextMenu popup = new ContextMenu();
             popup.getItems().addAll(
-                addQuPathMenuItem(importXMLAnnotation, "Import XML Annotation"),
-                addQuPathMenuItem(importJSONAnnotation, "Import JSON Annotation"),
-                addQuPathMenuItem(exportJSONAnnotation, "Export JSON Annotation")
+                addQuPathMenuItem(importXMLAnnotation, importXMLAnnotation.commandName()),
+                addQuPathMenuItem(importJSONAnnotation, importJSONAnnotation.commandName()),
+                addQuPathMenuItem(exportJSONAnnotation, exportJSONAnnotation.commandName())
             );
             btnAnnotationExchange.setOnMouseClicked(e -> {
                 popup.show(btnAnnotationExchange, e.getScreenX(), e.getScreenY());
@@ -72,17 +72,17 @@ public class AnnotationExchangeExtension implements QuPathExtension{
             qupath.addToolbarButton(btnAnnotationExchange);
         } catch (Exception e) {
             logger.error("Error adding toolbar buttons", e);
-            qupath.addToolbarCommand("Import XML Annotation", importXMLAnnotation, PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS));
-            qupath.addToolbarCommand("Import JSON Annotation", importJSONAnnotation, PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS));
-            qupath.addToolbarCommand("Export JSON Annotation",exportJSONAnnotation, PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS));
+            qupath.addToolbarCommand(importXMLAnnotation.commandName(), importXMLAnnotation, PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS));
+            qupath.addToolbarCommand(importJSONAnnotation.commandName(), importJSONAnnotation, PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS));
+            qupath.addToolbarCommand(exportJSONAnnotation.commandName(),exportJSONAnnotation, PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS));
         }
 
         Menu menuExtension = qupath.getMenu("Extensions>Annotations Exchange", true);
         QuPathGUI.addMenuItems(
             menuExtension,
-            addQuPathMenuItem(importXMLAnnotation, "Import XML Annotation"),
-            addQuPathMenuItem(importJSONAnnotation, "Import JSON Annotation"),
-            addQuPathMenuItem(exportJSONAnnotation, "Export JSON Annotation")
+            addQuPathMenuItem(importXMLAnnotation, importXMLAnnotation.commandName()),
+            addQuPathMenuItem(importJSONAnnotation, importJSONAnnotation.commandName()),
+            addQuPathMenuItem(exportJSONAnnotation, exportJSONAnnotation.commandName())
         );
     }
 

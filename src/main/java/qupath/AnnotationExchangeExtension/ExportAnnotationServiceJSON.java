@@ -30,7 +30,14 @@ public class ExportAnnotationServiceJSON implements PathCommand{
 
     private QuPathGUI qupath;
     final private static Logger logger = LoggerFactory.getLogger(ImportAnnotationServiceJSON.class);
+    private final String commandName = "Export JSON Annotation";
 
+    /**
+     * @return Returns the commandName assigned to this class
+     */
+    public String commandName() {
+        return commandName;
+    }
 
     public ExportAnnotationServiceJSON(QuPathGUI qupath){
 

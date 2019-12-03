@@ -34,7 +34,14 @@ public class ImportXMLAnnotation implements PathCommand {
 
     private QuPathGUI qupath;
     final private static Logger logger = LoggerFactory.getLogger(ImportXMLAnnotation.class);
+    private final String commandName = "Import XML Annotation";
 
+    /**
+     * @return Returns the commandName assigned to this class
+     */
+    public String commandName() {
+        return commandName;
+    }
 
     public ImportXMLAnnotation(QuPathGUI qupath){
 
