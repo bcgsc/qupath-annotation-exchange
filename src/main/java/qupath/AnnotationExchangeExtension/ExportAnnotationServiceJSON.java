@@ -38,9 +38,15 @@ public class ExportAnnotationServiceJSON implements PathCommand{
         }
 
         FileChooser fileChooser = new FileChooser();
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JSON Annotation", "*.json");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+            "JSON Annotation",
+            "*.json"
+        );
         fileChooser.getExtensionFilters().add(extFilter);
-        //The annotation service code looks for files with the slide's name to import the annotation, so the file must contain the slide name.
+        /**
+         * The annotation service code looks for files with the slide's name to import the annotation, so the file must
+         * contain the slide name.
+         */
         fileChooser.setInitialFileName(qupath.getViewer().getServer().getDisplayedImageName() + "_imported");
         File inputFile = fileChooser.showSaveDialog(null );
 

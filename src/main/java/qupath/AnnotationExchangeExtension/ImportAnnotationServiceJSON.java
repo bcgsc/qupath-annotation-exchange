@@ -35,7 +35,10 @@ public class ImportAnnotationServiceJSON implements PathCommand{
         }
 
         FileChooser fileChooser = new FileChooser();
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JSON Annotation", "*.json");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+            "JSON Annotation",
+            "*.json"
+        );
         fileChooser.getExtensionFilters().add(extFilter);
         File inputFile = fileChooser.showOpenDialog(null );
 
