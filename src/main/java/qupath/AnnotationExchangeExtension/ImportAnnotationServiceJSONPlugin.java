@@ -20,8 +20,8 @@ import java.io.FileReader;
 import java.util.*;
 
 public class ImportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedImage> {
-    File annotationFile;
-    String lastMessage = "";
+    private File annotationFile;
+    private String lastMessage = "";
 
     public ImportAnnotationServiceJSONPlugin(File annotationFile) {
         this.annotationFile = annotationFile;

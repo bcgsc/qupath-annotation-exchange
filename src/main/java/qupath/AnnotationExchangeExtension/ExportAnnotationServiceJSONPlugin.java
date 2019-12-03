@@ -22,8 +22,8 @@ import java.util.List;
 
 public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedImage> {
 
-    File annotationFile;
-    String lastMessage = "";
+    private File annotationFile;
+    private String lastMessage = "";
 
     public ExportAnnotationServiceJSONPlugin( File annotationFile) {
         this.annotationFile = annotationFile;
