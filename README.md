@@ -3,6 +3,8 @@
 This extension for [QuPath](https://github.com/qupath/qupath) imports annotations made on `.svs` files using
 [PaperJS](https://github.com/paperjs/paper.js) in combination with [OpenSeaDragon](https://github.com/openseadragon/openseadragon).
 
+## JSON Structure
+
 The coordinates, color, and other metadata of the annotations must be saved in a `.json` file, structured as follows:
 
 ```jsonc
