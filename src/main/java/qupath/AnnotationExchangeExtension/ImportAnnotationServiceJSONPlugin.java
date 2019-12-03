@@ -129,26 +129,31 @@ public class ImportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                     float[] yPoints = new float[coordinates.size()];
 
                     //Loop over all coordinates in annotation
-                    int coordIndex = 0;
+                    int numOfPoints = 0;
                     //Loop through all the coordinates
                     for (JsonElement coordinate : coordinates) {
-                        xPoints[coordIndex] = coordinate.getAsJsonObject().get("x").getAsFloat();
-                        yPoints[coordIndex] = coordinate.getAsJsonObject().get("y").getAsFloat();
+                        xPoints[numOfPoints] = coordinate.getAsJsonObject().get("x").getAsFloat();
+                        yPoints[numOfPoints] = coordinate.getAsJsonObject().get("y").getAsFloat();
 
-                        coordIndex++;
+                        numOfPoints++;
                     }
 
                     PathAnnotationObject importedAnnotation;
 
-                    //Import the annotation as a Point/Line/Polygon depending on number of coordinates / size
-                    switch(coordIndex) {
+                    // Import the annotation as a Point/Line/Polygon depending on number of coordinates / size
+                    switch(numOfPoints) {
                         case 1:
+                            // Only a single point was found, thus this is a point annotation
                             PointsROI annotaionPoint = new PointsROI(xPoints[0], yPoints[0]);
                             importedAnnotation = new PathAnnotationObject(annotaionPoint);
                             break;
                         case 2:
+                            // Two points were found, thus this is a line annotation
                             LineROI annotationLine = new LineROI(xPoints[0],yPoints[0],xPoints[1],yPoints[1]);
-                            //If the line is really short then we will assume it's a point which was made into a line by mistake
+                            /**
+                             * If the line is really short then we will assume it's a point which was made into a line
+                             * by mistake
+                             */
                             if(annotationLine.getScaledLength(imageData.getServer().getPixelWidthMicrons(),imageData.getServer().getPixelWidthMicrons()) < 5)
                             {
                                 PointsROI annotationPointCentroid = new PointsROI(annotationLine.getCentroidX(),annotationLine.getCentroidY());
@@ -158,11 +163,12 @@ public class ImportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                             }
                             break;
                         default:
+                            // Multiple points were found, thus this is a polygon annotation
                             PolygonROI annotaionPoly = new PolygonROI(xPoints, yPoints, -1, 0, 0);
                             importedAnnotation = new PathAnnotationObject(annotaionPoly);
                             break;
                     }
-                    //Set first letter uppercase to match QuPath (In case they aren't already)
+                    // Set first letter uppercase to match QuPath (In case they aren't already)
                     annotationDictionary = annotationDictionary.substring(0, 1).toUpperCase() + annotationDictionary.substring(1);
                     annotationName = annotationName.substring(0, 1).toUpperCase() + annotationName.substring(1);
 
