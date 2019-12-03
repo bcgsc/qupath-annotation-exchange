@@ -124,17 +124,22 @@ public class ImportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                     int blueChannel = Math.round(annotationColor.get(2).getAsFloat() * 255);
                     int annotationColorInt = ((((redChannel << 8) + greenChannel) << 8) + blueChannel);
 
-                    JsonArray coordinates = jsonAnnotation.getAsJsonObject().get("imgCoords").getAsJsonArray();
-                    float[] xPoints = new float[coordinates.size()];
-                    float[] yPoints = new float[coordinates.size()];
+                    JsonArray segments = jsonAnnotation.getAsJsonObject()
+                        .get("path").getAsJsonArray()
+                        .get(1).getAsJsonObject()
+                        .get("segments").getAsJsonArray();
+                    float[] xPoints = new float[segments.size()];
+                    float[] yPoints = new float[segments.size()];
 
                     //Loop over all coordinates in annotation
                     int numOfPoints = 0;
                     //Loop through all the coordinates
-                    for (JsonElement coordinate : coordinates) {
-                        xPoints[numOfPoints] = coordinate.getAsJsonObject().get("x").getAsFloat();
-                        yPoints[numOfPoints] = coordinate.getAsJsonObject().get("y").getAsFloat();
-
+                    for (JsonElement segment : segments) {
+                        JsonArray coordinates = segment.getAsJsonArray().get(0).getAsJsonArray();
+                        // The 0th element of the array is the X coordinate
+                        xPoints[numOfPoints] = coordinates.get(0).getAsFloat();
+                        // The 1st element of the array is the Y coordinate
+                        yPoints[numOfPoints] = coordinates.get(1).getAsFloat();
                         numOfPoints++;
                     }
 
