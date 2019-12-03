@@ -14,10 +14,6 @@ import qupath.lib.gui.icons.PathIconFactory;
 
 import java.net.URL;
 
-
-/**
- * Created by cschlosser on 01/06/2017.
- */
 public class AnnotationExchangeExtension implements QuPathExtension{
 
     final private static Logger logger = LoggerFactory.getLogger(AnnotationExchangeExtension.class);
@@ -27,8 +23,6 @@ public class AnnotationExchangeExtension implements QuPathExtension{
         ImportXMLAnnotation importXMLAnnotation = new ImportXMLAnnotation(qupath);
         ImportAnnotationServiceJSON importJSONAnnotation = new ImportAnnotationServiceJSON(qupath);
         ExportAnnotationServiceJSON exportJSONAnnotation = new ExportAnnotationServiceJSON(qupath);
-        // PropagateAnnotations propagateAnnotations = new PropagateAnnotations(qupath);
-
 
         // Add buttons to toolbar
         qupath.addToolbarSeparator();
@@ -44,7 +38,6 @@ public class AnnotationExchangeExtension implements QuPathExtension{
                     QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(importXMLAnnotation, "Import XML Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null)),
                     QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(importJSONAnnotation, "Import JSON Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null)),
                     QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(exportJSONAnnotation, "Export JSON Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null))
-                    // QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(propagateAnnotations, "Propagate Annotations", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null))
             );
             btnAnnotationExchange.setOnMouseClicked(e -> {
                 popup.show(btnAnnotationExchange, e.getScreenX(), e.getScreenY());
@@ -57,7 +50,6 @@ public class AnnotationExchangeExtension implements QuPathExtension{
             qupath.addToolbarCommand("Import XML Annotation", importXMLAnnotation, PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS));
             qupath.addToolbarCommand("Import JSON Annotation", importJSONAnnotation, PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS));
             qupath.addToolbarCommand("Export JSON Annotation",exportJSONAnnotation, PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS));
-            // qupath.addToolbarCommand("Propagate Annotations", propagateAnnotations, PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS));
         }
 
 
@@ -67,7 +59,6 @@ public class AnnotationExchangeExtension implements QuPathExtension{
                 QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(importXMLAnnotation, "Import XML Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null)),
                 QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(importJSONAnnotation, "Import JSON Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null)),
                 QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(exportJSONAnnotation, "Export JSON Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null))
-                // QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(propagateAnnotations, "Propagate Annotations", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null))
         );
 
     }
@@ -83,13 +74,6 @@ public class AnnotationExchangeExtension implements QuPathExtension{
         try {
             URL in = AnnotationExchangeExtension.class.getResource("AnnotationExchange.gif");
             return new Image(in.toString(), width, height, true, true);
-//            InputStream in = AnnotationExchangeExtension.class.getResourceAsStream("/AnnotationExchange.gif");
-//            BufferedImage buffIcon = ImageIO.read(in);
-//            ImageView icon = new ImageView( SwingFXUtils.toFXImage(buffIcon, null) );
-//            icon.setPreserveRatio(false);
-//            icon.setFitHeight(height);
-//            icon.setFitWidth(width);
-//            return icon.snapshot(null,null);
         } catch (Exception e) {
             logger.error("Unable to load Annotation Exchange icon!", e);
         }
