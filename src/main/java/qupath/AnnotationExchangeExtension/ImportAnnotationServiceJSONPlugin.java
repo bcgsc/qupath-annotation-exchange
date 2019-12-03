@@ -20,85 +20,71 @@ import java.io.FileReader;
 import java.util.*;
 
 public class ImportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedImage> {
-
     File annotationFile;
     String lastMessage = "";
 
-        public ImportAnnotationServiceJSONPlugin( File annotationFile) {
-            this.annotationFile = annotationFile;
-        }
+    public ImportAnnotationServiceJSONPlugin(File annotationFile) {
+        this.annotationFile = annotationFile;
+    }
 
+    @Override
+    protected void addWorkflowStep(final ImageData<BufferedImage> imageData, final String arg) {
+        // Do nothin
+    }
 
-        @Override
-        protected void addWorkflowStep(final ImageData<BufferedImage> imageData, final String arg) {
-            // Do nothin
-        }
+    @Override
+    public String getName() {
+        return "Import Annotation Service JSON";
+    }
 
-        @Override
-        public String getName() {
-            return "Import Annotation Service JSON";
-        }
+    @Override
+    public String getDescription() {
+        return "Plugin for importing JSON Data Made in Spotvision / Annotation Service ";
+    }
 
-        @Override
-        public String getDescription() {
-            return "Plugin for importing JSON Data Made in Spotvision / Annotation Service ";
-        }
+    @Override
+    public String getLastResultsDescription() {
+        return lastMessage;
+    }
 
-        @Override
-        public String getLastResultsDescription() {
-            return lastMessage;
-        }
+    @Override
+    protected boolean parseArgument(ImageData<BufferedImage> imageData, String arg) {
+        return true;
+    }
 
-        @Override
-        protected boolean parseArgument(ImageData<BufferedImage> imageData, String arg) {
-            return true;
-        }
+    public Collection<Class<? extends PathObject>> getSupportedParentObjectClasses() {
+        List<Class<? extends PathObject>> list = new ArrayList<>(1);
+        list.add(PathRootObject.class);
+        return list;
+    }
 
-        public Collection<Class<? extends PathObject>> getSupportedParentObjectClasses() {
-            List<Class<? extends PathObject>> list = new ArrayList<>(1);
-            list.add(PathRootObject.class);
-            return list;
-        }
+    @Override
+    protected Collection<? extends PathObject> getParentObjects(PluginRunner<BufferedImage> runner) {
+        return Collections.singleton(runner.getHierarchy().getRootObject());
+    }
 
-        @Override
-        protected Collection<? extends PathObject> getParentObjects(PluginRunner<BufferedImage> runner) {
-            return Collections.singleton(runner.getHierarchy().getRootObject());
-        }
+    @Override
+    protected void addRunnableTasks(ImageData<BufferedImage> imageData, PathObject parentObject, List<Runnable> tasks) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                boolean successfulRead = readJSONAnnotations(annotationFile,imageData);
+                if(!successfulRead){lastMessage = "JSON annotations not successfully read";}
+            }
+        };
+        tasks.add(runnable);
+    }
 
-        @Override
-        protected void addRunnableTasks(ImageData<BufferedImage> imageData, PathObject parentObject, List<Runnable> tasks) {
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
+    @Override
+    protected void preprocess(final PluginRunner<BufferedImage> pluginRunner) {}
 
-                    boolean successfulRead = readJSONAnnotations(annotationFile,imageData);
-                    if(!successfulRead){lastMessage = "JSON annotations not successfully read";}
-
-                }
-
-            };
-
-            tasks.add(runnable);
-        }
-
-
-        @Override
-        protected void preprocess(final PluginRunner<BufferedImage> pluginRunner){
-        }
-
-
-        @Override
-        protected void postprocess(final PluginRunner<BufferedImage> pluginRunner) {
-        }
-
-
+    @Override
+    protected void postprocess(final PluginRunner<BufferedImage> pluginRunner) {}
 
     private boolean readJSONAnnotations(File inputFile, ImageData imageData ) {
-
         PathObjectHierarchy hierarchy = imageData.getHierarchy();
 
         try {
-
             JsonReader jsonReader = new JsonReader(new FileReader(inputFile));
             JsonParser jsonParser = new JsonParser();
 
@@ -114,12 +100,9 @@ public class ImportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
 
             //Loop though all the "dictionaries"
             for (JsonElement jsonAnnotationDictionary : jsonAnnotationDictionaries) {
-
                 JsonArray jsonAnnotations = jsonAnnotationDictionary.getAsJsonArray();
-
                 //Loop through every annotation in the dictionary
                 for (JsonElement jsonAnnotation : jsonAnnotations) {
-
                     //At the moment we were assuming that the name corresponds to tissue type so we will try to match it up with QuPath types and if none match, create a new one
                     String annotationName = jsonAnnotation.getAsJsonObject().get("name").getAsString();
 
@@ -132,9 +115,10 @@ public class ImportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                     String annotationUID = jsonAnnotation.getAsJsonObject().get("uid").getAsString();
 
                     JsonArray annotationColor = jsonAnnotation.getAsJsonObject().get("path")
-                            .getAsJsonArray().get(1)
-                            .getAsJsonObject().get("fillColor")
-                            .getAsJsonArray();
+                        .getAsJsonArray().get(1)
+                        .getAsJsonObject().get("fillColor")
+                        .getAsJsonArray();
+
                     int redChannel = Math.round(annotationColor.get(0).getAsFloat() * 255);
                     int greenChannel = Math.round(annotationColor.get(1).getAsFloat() * 255);
                     int blueChannel = Math.round(annotationColor.get(2).getAsFloat() * 255);
@@ -148,17 +132,13 @@ public class ImportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                     int coordIndex = 0;
                     //Loop through all the coordinates
                     for (JsonElement coordinate : coordinates) {
-
                         xPoints[coordIndex] = coordinate.getAsJsonObject().get("x").getAsFloat();
                         yPoints[coordIndex] = coordinate.getAsJsonObject().get("y").getAsFloat();
 
                         coordIndex++;
-
                     }
 
-
                     PathAnnotationObject importedAnnotation;
-
 
                     //Import the annotation as a Point/Line/Polygon depending on number of coordinates / size
                     switch(coordIndex) {
@@ -186,7 +166,6 @@ public class ImportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                     annotationDictionary = annotationDictionary.substring(0, 1).toUpperCase() + annotationDictionary.substring(1);
                     annotationName = annotationName.substring(0, 1).toUpperCase() + annotationName.substring(1);
 
-
                     if (!PathClassFactory.pathClassExists(annotationName))
                         importedAnnotation.setColorRGB(annotationColorInt);
                     else {
@@ -198,18 +177,11 @@ public class ImportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                 }
 
                 hierarchy.fireHierarchyChangedEvent(this);
-
             }
-
-
         } catch(java.io.FileNotFoundException ex){
             lastMessage = "Error Reading JSON File";
             return false;
         }
-
         return true;
-
     }
-
-
 }

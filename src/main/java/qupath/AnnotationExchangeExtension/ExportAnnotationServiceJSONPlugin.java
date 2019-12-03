@@ -63,9 +63,7 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
 
     @Override
     protected Collection<? extends PathObject> getParentObjects(PluginRunner<BufferedImage> runner) {
-
         return Collections.singleton(runner.getHierarchy().getRootObject());
-
     }
 
     @Override
@@ -73,33 +71,20 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-
-
-
                 boolean successfulRead = writeJSONAnnotations(annotationFile,imageData);
                 if(!successfulRead){lastMessage = "JSON annotations not successfully read";}
-
             }
-
         };
-
         tasks.add(runnable);
     }
 
+    @Override
+    protected void preprocess(final PluginRunner<BufferedImage> pluginRunner) {}
 
     @Override
-    protected void preprocess(final PluginRunner<BufferedImage> pluginRunner){
-    }
-
-
-    @Override
-    protected void postprocess(final PluginRunner<BufferedImage> pluginRunner) {
-    }
-
-
+    protected void postprocess(final PluginRunner<BufferedImage> pluginRunner) {}
 
     private boolean writeJSONAnnotations(File outputFile, ImageData<BufferedImage> imageData ) {
-
         //Make filter for supported objects (annotations in this case)
         Collection<Class<? extends PathObject>> supported = getSupportedParentObjectClasses();
 
@@ -111,7 +96,6 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
 
         //Filter selected objects for annotations
         Collection<? extends PathObject> objects = PathObjectTools.getSupportedObjects(selectedObjects, supported);
-
 
         //The JSON File imported by the annotation service has the following structure:
         // <JSON Array>                             (Array of annotations)
@@ -149,22 +133,16 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
         //  ...
         //  ...
 
-
         try {
-
             JsonArray annotationLayout = new JsonArray();
 
-
-
             int count = 0;
-            for(PathObject annotation : objects)
-            {
+            for(PathObject annotation : objects) {
                 PathShape pathShape = (PathShape)annotation.getROI();
                 Area area = PathROIToolsAwt.getArea(pathShape);
                 PolygonROI[][] annotationPolygons = PathROIToolsAwt.splitAreaToPolygons(area);
 
                 for(int i = 0; i<annotationPolygons[1].length; i++) {
-
                     count++;
                     JsonObject jsonAnnotation = new JsonObject();
                     jsonAnnotation.addProperty("uid", count);
@@ -172,7 +150,6 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
 
                     JsonArray imgCoords = new JsonArray();
                     JsonArray pathCoords = new JsonArray();
-
 
                     for (Point2 point : annotationPolygons[1][i].getPolygonPoints()) {
                         JsonObject annotationPoint = new JsonObject();
@@ -230,24 +207,16 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
 
                     annotationLayout.add(jsonAnnotation);
                 }
-
             }
-
 
             Gson gson = new GsonBuilder().create();
             Writer writer = new FileWriter(outputFile);
             gson.toJson(annotationLayout,writer);
             writer.close();
-
-
         } catch(java.io.IOException ex){
             lastMessage = "Error Reading JSON File";
             return false;
         }
-
         return true;
-
     }
-
-
 }
