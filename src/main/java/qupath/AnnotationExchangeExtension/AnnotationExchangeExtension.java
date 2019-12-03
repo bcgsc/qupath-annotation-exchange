@@ -72,9 +72,33 @@ public class AnnotationExchangeExtension implements QuPathExtension{
             qupath.addToolbarButton(btnAnnotationExchange);
         } catch (Exception e) {
             logger.error("Error adding toolbar buttons", e);
-            qupath.addToolbarCommand(importXMLAnnotation.commandName(), importXMLAnnotation, PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS));
-            qupath.addToolbarCommand(importJSONAnnotation.commandName(), importJSONAnnotation, PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS));
-            qupath.addToolbarCommand(exportJSONAnnotation.commandName(),exportJSONAnnotation, PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS));
+            qupath.addToolbarCommand(
+                importXMLAnnotation.commandName(),
+                importXMLAnnotation,
+                PathIconFactory.createNode(
+                    QuPathGUI.iconSize,
+                    QuPathGUI.iconSize,
+                    PathIconFactory.PathIcons.ANNOTATIONS
+                )
+            );
+            qupath.addToolbarCommand(
+                importJSONAnnotation.commandName(),
+                importJSONAnnotation,
+                PathIconFactory.createNode(
+                    QuPathGUI.iconSize,
+                    QuPathGUI.iconSize,
+                    PathIconFactory.PathIcons.ANNOTATIONS
+                )
+            );
+            qupath.addToolbarCommand(
+                exportJSONAnnotation.commandName(),
+                exportJSONAnnotation,
+                PathIconFactory.createNode(
+                    QuPathGUI.iconSize,
+                    QuPathGUI.iconSize,
+                    PathIconFactory.PathIcons.ANNOTATIONS
+                )
+            );
         }
 
         Menu menuExtension = qupath.getMenu("Extensions>Annotations Exchange", true);
