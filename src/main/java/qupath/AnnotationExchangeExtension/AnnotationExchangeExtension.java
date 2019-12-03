@@ -47,7 +47,6 @@ public class AnnotationExchangeExtension implements QuPathExtension{
     };
 
     public static void addQuPathCommands(final QuPathGUI qupath) {
-        ImportXMLAnnotation importXMLAnnotation = new ImportXMLAnnotation(qupath);
         ImportAnnotationServiceJSON importJSONAnnotation = new ImportAnnotationServiceJSON(qupath);
         ExportAnnotationServiceJSON exportJSONAnnotation = new ExportAnnotationServiceJSON(qupath);
 
@@ -61,7 +60,6 @@ public class AnnotationExchangeExtension implements QuPathExtension{
             btnAnnotationExchange.setTooltip(new Tooltip("Annotation Exchange - Import/Export"));
             ContextMenu popup = new ContextMenu();
             popup.getItems().addAll(
-                addQuPathMenuItem(importXMLAnnotation, importXMLAnnotation.commandName()),
                 addQuPathMenuItem(importJSONAnnotation, importJSONAnnotation.commandName()),
                 addQuPathMenuItem(exportJSONAnnotation, exportJSONAnnotation.commandName())
             );
@@ -72,15 +70,6 @@ public class AnnotationExchangeExtension implements QuPathExtension{
             qupath.addToolbarButton(btnAnnotationExchange);
         } catch (Exception e) {
             logger.error("Error adding toolbar buttons", e);
-            qupath.addToolbarCommand(
-                importXMLAnnotation.commandName(),
-                importXMLAnnotation,
-                PathIconFactory.createNode(
-                    QuPathGUI.iconSize,
-                    QuPathGUI.iconSize,
-                    PathIconFactory.PathIcons.ANNOTATIONS
-                )
-            );
             qupath.addToolbarCommand(
                 importJSONAnnotation.commandName(),
                 importJSONAnnotation,
@@ -104,7 +93,6 @@ public class AnnotationExchangeExtension implements QuPathExtension{
         Menu menuExtension = qupath.getMenu("Extensions>Annotations Exchange", true);
         QuPathGUI.addMenuItems(
             menuExtension,
-            addQuPathMenuItem(importXMLAnnotation, importXMLAnnotation.commandName()),
             addQuPathMenuItem(importJSONAnnotation, importJSONAnnotation.commandName()),
             addQuPathMenuItem(exportJSONAnnotation, exportJSONAnnotation.commandName())
         );
