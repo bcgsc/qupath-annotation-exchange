@@ -154,11 +154,15 @@ public class ImportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                              * If the line is really short then we will assume it's a point which was made into a line
                              * by mistake
                              */
-                            if(annotationLine.getScaledLength(imageData.getServer().getPixelWidthMicrons(),imageData.getServer().getPixelWidthMicrons()) < 5)
-                            {
+                            if (
+                                annotationLine.getScaledLength(
+                                    imageData.getServer().getPixelWidthMicrons(),
+                                    imageData.getServer().getPixelWidthMicrons()
+                                ) < 5
+                            ) {
                                 PointsROI annotationPointCentroid = new PointsROI(annotationLine.getCentroidX(),annotationLine.getCentroidY());
                                 importedAnnotation = new PathAnnotationObject(annotationPointCentroid);
-                            }else{
+                            } else {
                                 importedAnnotation = new PathAnnotationObject(annotationLine);
                             }
                             break;
