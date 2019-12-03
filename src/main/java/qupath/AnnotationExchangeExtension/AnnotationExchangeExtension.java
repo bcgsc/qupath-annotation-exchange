@@ -58,7 +58,7 @@ public class AnnotationExchangeExtension implements QuPathExtension{
             ImageView imageView = new ImageView(getAnnotationExchangeIcon(QuPathGUI.iconSize, QuPathGUI.iconSize));
             Button btnAnnotationExchange = new Button();
             btnAnnotationExchange.setGraphic(imageView);
-            btnAnnotationExchange.setTooltip(new Tooltip("LMD Contour Export"));
+            btnAnnotationExchange.setTooltip(new Tooltip("Annotation Exchange - Import/Export"));
             ContextMenu popup = new ContextMenu();
             popup.getItems().addAll(
                 addQuPathMenuItem(importXMLAnnotation, importXMLAnnotation.commandName()),
