@@ -34,15 +34,13 @@ public class AnnotationExchangeExtension implements QuPathExtension{
             btnAnnotationExchange.setTooltip(new Tooltip("LMD Contour Export"));
             ContextMenu popup = new ContextMenu();
             popup.getItems().addAll(
-
-                    QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(importXMLAnnotation, "Import XML Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null)),
-                    QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(importJSONAnnotation, "Import JSON Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null)),
-                    QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(exportJSONAnnotation, "Export JSON Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null))
+                QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(importXMLAnnotation, "Import XML Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null)),
+                QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(importJSONAnnotation, "Import JSON Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null)),
+                QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(exportJSONAnnotation, "Export JSON Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null))
             );
             btnAnnotationExchange.setOnMouseClicked(e -> {
                 popup.show(btnAnnotationExchange, e.getScreenX(), e.getScreenY());
             });
-
 
             qupath.addToolbarButton(btnAnnotationExchange);
         } catch (Exception e) {
@@ -52,15 +50,13 @@ public class AnnotationExchangeExtension implements QuPathExtension{
             qupath.addToolbarCommand("Export JSON Annotation",exportJSONAnnotation, PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS));
         }
 
-
-
         Menu menuExtension = qupath.getMenu("Extensions>Annotations Exchange", true);
-        QuPathGUI.addMenuItems(menuExtension,
-                QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(importXMLAnnotation, "Import XML Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null)),
-                QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(importJSONAnnotation, "Import JSON Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null)),
-                QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(exportJSONAnnotation, "Export JSON Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null))
+        QuPathGUI.addMenuItems(
+            menuExtension,
+            QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(importXMLAnnotation, "Import XML Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null)),
+            QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(importJSONAnnotation, "Import JSON Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null)),
+            QuPathGUI.createMenuItem(QuPathGUI.createCommandAction(exportJSONAnnotation, "Export JSON Annotation", PathIconFactory.createNode(QuPathGUI.iconSize, QuPathGUI.iconSize, PathIconFactory.PathIcons.ANNOTATIONS), null))
         );
-
     }
 
     /**
@@ -80,7 +76,6 @@ public class AnnotationExchangeExtension implements QuPathExtension{
         return null;
     }
 
-
     @Override
     public void installExtension(QuPathGUI qupath) {
         addQuPathCommands(qupath);
@@ -95,6 +90,4 @@ public class AnnotationExchangeExtension implements QuPathExtension{
     public String getDescription() {
         return "Allows imports of JSON files generated from the GSC Online Annotation Viewer";
     }
-
-
 }
