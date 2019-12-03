@@ -15,7 +15,6 @@ import java.io.File;
  */
 public class ExportAnnotationServiceJSON implements PathCommand{
 
-
     private QuPathGUI qupath;
     final private static Logger logger = LoggerFactory.getLogger(ImportAnnotationServiceJSON.class);
     private final String commandName = "Export JSON Annotation";
@@ -28,16 +27,12 @@ public class ExportAnnotationServiceJSON implements PathCommand{
     }
 
     public ExportAnnotationServiceJSON(QuPathGUI qupath){
-
         this.qupath = qupath;
-
     }
 
     public void run(){
-
         QuPathViewer viewer = qupath.getViewer();
-        if (viewer == null || viewer.getServer() == null)
-        {
+        if (viewer == null || viewer.getServer() == null) {
             logger.error("No Slide Loaded.");
             return;
         }
@@ -49,7 +44,7 @@ public class ExportAnnotationServiceJSON implements PathCommand{
         fileChooser.setInitialFileName(qupath.getViewer().getServer().getDisplayedImageName() + "_imported");
         File inputFile = fileChooser.showSaveDialog(null );
 
-        if(inputFile == null){
+        if (inputFile == null) {
             logger.error("No JSON File Selected");
             return;
         }
@@ -57,11 +52,5 @@ public class ExportAnnotationServiceJSON implements PathCommand{
         PluginRunnerFX runner = new PluginRunnerFX(qupath,false);
         ExportAnnotationServiceJSONPlugin exportJSON = new ExportAnnotationServiceJSONPlugin(inputFile);
         exportJSON.runPlugin(runner, null);
-
     }
-
-
-
-
-
 }
