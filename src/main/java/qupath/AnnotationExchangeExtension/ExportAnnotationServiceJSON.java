@@ -1,26 +1,14 @@
 package qupath.AnnotationExchangeExtension;
 
-import com.google.gson.*;
-import com.google.gson.stream.JsonReader;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import qupath.imagej.detect.tissue.SimpleTissueDetection2;
 import qupath.lib.gui.QuPathGUI;
 import qupath.lib.gui.commands.interfaces.PathCommand;
 import qupath.lib.gui.viewer.QuPathViewer;
-import qupath.lib.objects.PathAnnotationObject;
-import qupath.lib.objects.classes.PathClassFactory;
-import qupath.lib.objects.hierarchy.PathObjectHierarchy;
 import qupath.lib.plugins.PluginRunnerFX;
-import qupath.lib.roi.LineROI;
-import qupath.lib.roi.PointsROI;
-import qupath.lib.roi.PolygonROI;
-
 
 import java.io.File;
-import java.io.FileReader;
-
 
 /**
  * Created by cschlosser on 25/06/2018.
