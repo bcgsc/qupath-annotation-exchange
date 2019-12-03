@@ -87,11 +87,11 @@ public class AnnotationExchangeExtension implements QuPathExtension{
     }
 
     /**
-     * Try to read the LMDExport icon from its jar.
+     * Return the image that is the icon for the AnnotationExchange extension
      *
-     * @param width
-     * @param height
-     * @return
+     * @param width Width of the returned icon in pixels
+     * @param height Height of the returned icon in pixels
+     * @return The icon associated with AnnotationExchange, formatted with the given width and height attributes
      */
     public static Image getAnnotationExchangeIcon(final int width, final int height) {
         try {
