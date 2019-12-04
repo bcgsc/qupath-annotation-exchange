@@ -154,13 +154,26 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                     JsonArray pathCoords = new JsonArray();
 
                     for (Point2 point : annotationPolygons[1][i].getPolygonPoints()) {
-                         //It appears that to convert between the image coordinates and the coordinates used to draw the annotation, we divide the image coordinates
-                        //in both dimensions by the total *width* of the image and then multiply by a factor of 1000.
+                        JsonArray segment = new JsonArray();
+                        JsonArray pathCoordPoint = new JsonArray();
+                        pathCoordPoint.add(point.getX());
+                        pathCoordPoint.add(point.getY());
+                        segment.add(pathCoordPoint);
+                        /**
+                         * In order to mimic the data-structure of a PaperJS.segment, there needs to be two additional
+                         * arrays
+                         *
+                         * Since this data is not used, they can contain zeroed coordinates
+                         *
+                         * http://paperjs.org/reference/segment/#segment
+                         */
+                        JsonArray zeroArray = new JsonArray();
+                        zeroArray.add(0.0);
+                        zeroArray.add(0.0);
+                        segment.add(zeroArray);
+                        segment.add(zeroArray);
 
-                        JsonObject pathCoordPoint = new JsonObject();
-                        pathCoordPoint.addProperty("0", point.getX() / imageData.getServer().getWidth() * 1000);
-                        pathCoordPoint.addProperty("1", point.getY() / imageData.getServer().getWidth() * 1000);
-                        pathCoords.add(pathCoordPoint);
+                        pathCoords.add(segment);
                     }
 
                     JsonArray path = new JsonArray();
