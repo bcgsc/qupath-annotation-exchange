@@ -151,16 +151,10 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                     jsonAnnotation.addProperty("uid", count);
                     jsonAnnotation.addProperty("name", (annotation.getPathClass() == null) ? "Unclassified" : annotation.getPathClass().toString());
 
-                    JsonArray imgCoords = new JsonArray();
                     JsonArray pathCoords = new JsonArray();
 
                     for (Point2 point : annotationPolygons[1][i].getPolygonPoints()) {
-                        JsonObject annotationPoint = new JsonObject();
-                        annotationPoint.addProperty("x", point.getX());
-                        annotationPoint.addProperty("y", point.getY());
-                        imgCoords.add(annotationPoint);
-
-                        //It appears that to convert between the image coordinates and the coordinates used to draw the annotation, we divide the image coordinates
+                         //It appears that to convert between the image coordinates and the coordinates used to draw the annotation, we divide the image coordinates
                         //in both dimensions by the total *width* of the image and then multiply by a factor of 1000.
 
                         JsonObject pathCoordPoint = new JsonObject();
@@ -168,8 +162,6 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                         pathCoordPoint.addProperty("1", point.getY() / imageData.getServer().getWidth() * 1000);
                         pathCoords.add(pathCoordPoint);
                     }
-
-                    jsonAnnotation.add("imgCoords", imgCoords);
 
                     JsonArray path = new JsonArray();
                     path.add("Path");
