@@ -24,9 +24,15 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
 
     private File annotationFile;
     private String lastMessage = "";
+    private String fileName = "";
 
     public ExportAnnotationServiceJSONPlugin( File annotationFile) {
         this.annotationFile = annotationFile;
+    }
+
+    public ExportAnnotationServiceJSONPlugin(File annotationFile, String fileName) {
+        this.annotationFile = annotationFile;
+        this.fileName = fileName;
     }
 
 

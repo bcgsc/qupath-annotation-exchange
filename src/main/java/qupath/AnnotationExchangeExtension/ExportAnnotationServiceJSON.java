@@ -47,7 +47,8 @@ public class ExportAnnotationServiceJSON implements PathCommand{
          * The annotation service code looks for files with the slide's name to import the annotation, so the file must
          * contain the slide name.
          */
-        fileChooser.setInitialFileName(qupath.getViewer().getServer().getDisplayedImageName() + "_imported");
+        final String slideName = qupath.getViewer().getServer().getDisplayedImageName();
+        fileChooser.setInitialFileName(slideName + "_imported");
         File inputFile = fileChooser.showSaveDialog(null );
 
         if (inputFile == null) {
@@ -56,7 +57,7 @@ public class ExportAnnotationServiceJSON implements PathCommand{
         }
 
         PluginRunnerFX runner = new PluginRunnerFX(qupath,false);
-        ExportAnnotationServiceJSONPlugin exportJSON = new ExportAnnotationServiceJSONPlugin(inputFile);
+        ExportAnnotationServiceJSONPlugin exportJSON = new ExportAnnotationServiceJSONPlugin(inputFile, slideName);
         exportJSON.runPlugin(runner, null);
     }
 }
