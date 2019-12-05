@@ -203,25 +203,23 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                     pathProperties.addProperty("closed", true);
                     JsonArray fillColour = new JsonArray();
 
-                    if (annotation.getPathClass() == null) {
-                        fillColour.add(1);
-                        fillColour.add(0);
-                        fillColour.add(0);
-                        fillColour.add(0.5);
-                    } else {
-                        int annotationRGB = annotation.getPathClass().getColor();
-                        fillColour.add((double) (ColorTools.red(annotationRGB)) / 255.0);
-                        fillColour.add((double) (ColorTools.green(annotationRGB)) / 255.0);
-                        fillColour.add((double) (ColorTools.blue(annotationRGB)) / 255.0);
-                        fillColour.add(0.5);
-                    }
+                    JsonArray strokeColor = new JsonArray();
+
+                    final int annotationRGB = annotation.getColorRGB();
+                    final double redValue = (double) (ColorTools.red(annotationRGB)) / 255.0;
+                    final double greenValue = (double) (ColorTools.green(annotationRGB)) / 255.0;
+                    final double blueValue = (double) (ColorTools.blue(annotationRGB)) / 255.0;
+                    fillColour.add(redValue);
+                    fillColour.add(greenValue);
+                    fillColour.add(blueValue);
+                    fillColour.add(0.5);
+                    strokeColor.add(redValue);
+                    strokeColor.add(greenValue);
+                    strokeColor.add(blueValue);
+
+                    pathProperties.add("strokeColor", strokeColor);
 
                     pathProperties.add("fillColor", fillColour);
-                    JsonArray strokeColor = new JsonArray();
-                    strokeColor.add(0);
-                    strokeColor.add(0);
-                    strokeColor.add(0);
-                    pathProperties.add("strokeColor", strokeColor);
                     pathProperties.addProperty("strokeScaling", false);
 
                     path.add(pathProperties);

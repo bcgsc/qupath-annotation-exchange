@@ -181,6 +181,10 @@ public class ImportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                     annotationDictionary = annotationDictionary.substring(0, 1).toUpperCase() + annotationDictionary.substring(1);
                     annotationName = annotationName.substring(0, 1).toUpperCase() + annotationName.substring(1);
 
+                    /**
+                     * @todo Check if this if/else block is still necessary? `setColorRGB()` in the `if` statement
+                     * seems to never get called, hence being added after this if/else block.
+                     */
                     if (!PathClassFactory.pathClassExists(annotationName))
                         importedAnnotation.setColorRGB(annotationColorInt);
                     else {
@@ -188,6 +192,7 @@ public class ImportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                     }
 
                     importedAnnotation.setName(annotationSlideName + "-" + annotationDictionary + "-" + annotationUID);
+                    importedAnnotation.setColorRGB(annotationColorInt);
                     hierarchy.addPathObject(importedAnnotation, true, false);
                 }
 
