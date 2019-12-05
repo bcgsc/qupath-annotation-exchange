@@ -104,46 +104,59 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
         Collection<? extends PathObject> objects = PathObjectTools.getSupportedObjects(selectedObjects, supported);
 
         /**
-         * The JSON File imported by the annotation service has the following structure:
-         *  <JSON Array>                             (Array of annotations)
-         *   <JSON Object>                           (Annotation)
-         *       uid: <int>
-         *       name: <String>
-         *       <JSON Array> imgCoords              (Actual coordinates of annotation on image)
-         *           <JSON Object>                   (Point)
-         *               x: <Double>
-         *               y: <Double>
-         *               ...
-         *       <JSON Array> path                   (Describes information for painting the annotation in Paper.js)
-         *           0:Path
-         *           1:<JSON Object>                 (Path Information)
-         *               applyMatrix:<Boolean>
-         *               <JSON Array> segments       (These are the points used to paint the annotation)
-         *                   <JSON Object>           (Point)
-         *                       x: <Double>
-         *                       y: <Double>
-         *               closed:<Boolean>            (Whether the path is closed or not)
-         *               <JSON Array> fillColor
-         *                   0:<Double>              (red color)
-         *                   1:<Double>              (green color)
-         *                   2:<Double>              (blue color)
-         *                   3:<Double>              (alpha)
-         *               <JSON Array> strokeColor
-         *                   0:<Double>              (red color)
-         *                   1:<Double>              (green color)
-         *                   2:<Double>              (blue color)
-         *               strokeScaling:<Boolean>
-         *       zoom:<Double>                       (What zoom level the annotation was drawn at. Not important for us)
-         *       <JSON Array> context                (This array determines which annotations are within which other
-         *                                            annotations. Not important for now but may be needed as more
-         *                                            sophisticated paths need to be exported)
-         *       dictionary:<String>                 (Which dictionary these annotations belong to. For now we always
-         *                                            use "imported")
-         *   <JSON Object>                           (Annotation)
+         * The data-structure of the exported JSON:
+         * [
+         *   {
+         *     "SourceSlide": "name-of-file.svs"
+         *   },
+         *   {
+         *     "dictionaries": [
+         *       [
+         *         {
+         *           "uid": "some-uid",
+         *           "name": "some-name",
+         *           "imgCoords": [
+         *             {
+         *               "x": 0.0,
+         *               "y": 0.0
+         *             },
+         *             // ...
+         *           ],
+         *           // http://paperjs.org/reference/path/
+         *           "path": [
+         *             "Path",
+         *             {
+         *               "applyMatrix": true,
+         *               "data": {
+         *                 "id": "some-uid"
+         *               },
+         *               "segments": [
+         *                 // http://paperjs.org/reference/segment/#segment
+         *                 [
+         *                   [0.0, 0.0],
+         *                   [0.0, 0.0],
+         *                   [0.0, 0.0]
+         *                 ],
+         *                 // ...
+         *               ],
+         *               "closed": true,
+         *               "fillColor": [0.0, 0.0, 0.0, 0.0],
+         *               "strokeColor": [0.0, 0.0, 0.0],
+         *               "strokeWidth": 50
+         *             }
+         *           ],
+         *           "zoom": 0,
+         *           "context": [],
+         *           "dictionary": "default"
+         *         }
+         *       ]
+         *     ]
+         *   }
+         * ]
          */
-
         try {
-            JsonArray annotationLayout = new JsonArray();
+            JsonArray arrayToExport = new JsonArray();
+            JsonArray dictionariesArray = new JsonArray();
 
             int count = 0;
             for(PathObject annotation : objects) {
@@ -219,13 +232,21 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                     jsonAnnotation.add("context", context);
                     jsonAnnotation.addProperty("dictionary", "imported");
 
-                    annotationLayout.add(jsonAnnotation);
+                    dictionariesArray.add(jsonAnnotation);
                 }
+                JsonObject sourceSlide = new JsonObject();
+                sourceSlide.addProperty("SourceSlide", this.fileName + ".svs");
+                arrayToExport.add(sourceSlide);
+                JsonObject dictionaries = new JsonObject();
+                JsonArray arrayOfAnnotations = new JsonArray();
+                arrayOfAnnotations.add(dictionariesArray);
+                dictionaries.add("dictionaries", arrayOfAnnotations);
+                arrayToExport.add(dictionaries);
             }
 
             Gson gson = new GsonBuilder().create();
             Writer writer = new FileWriter(outputFile);
-            gson.toJson(annotationLayout,writer);
+            gson.toJson(arrayToExport,writer);
             writer.close();
         } catch(java.io.IOException ex){
             lastMessage = "Error Reading JSON File";
