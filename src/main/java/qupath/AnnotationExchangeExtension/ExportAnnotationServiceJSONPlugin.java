@@ -205,7 +205,13 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
 
                     JsonArray strokeColor = new JsonArray();
 
-                    final int annotationRGB = annotation.getColorRGB();
+                    /**
+                     * PathObject.color is null by default, thus the color of the annotation needs to be manually set if
+                     * the user used the default color of RGB(255, 0, 0) (i.e. Red)
+                     */
+                    final int annotationRGB = annotation.getColorRGB() != null
+                        ? annotation.getColorRGB()
+                        : 16711680;
                     final double redValue = (double) (ColorTools.red(annotationRGB)) / 255.0;
                     final double greenValue = (double) (ColorTools.green(annotationRGB)) / 255.0;
                     final double blueValue = (double) (ColorTools.blue(annotationRGB)) / 255.0;
