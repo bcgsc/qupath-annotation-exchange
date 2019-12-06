@@ -191,7 +191,7 @@ public class ImportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                         importedAnnotation.setPathClass(PathClassFactory.getPathClass(annotationName));
                     }
 
-                    importedAnnotation.setName(annotationSlideName + "-" + annotationDictionary + "-" + annotationUID);
+                    importedAnnotation.setName(annotationUID);
                     importedAnnotation.setColorRGB(annotationColorInt);
                     hierarchy.addPathObject(importedAnnotation, true, false);
                 }
