@@ -115,13 +115,6 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
          *         {
          *           "uid": "some-uid",
          *           "name": "some-name",
-         *           "imgCoords": [
-         *             {
-         *               "x": 0.0,
-         *               "y": 0.0
-         *             },
-         *             // ...
-         *           ],
          *           // http://paperjs.org/reference/path/
          *           "path": [
          *             "Path",
