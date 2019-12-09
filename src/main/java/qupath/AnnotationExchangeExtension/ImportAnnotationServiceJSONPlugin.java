@@ -124,17 +124,22 @@ public class ImportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                     int blueChannel = Math.round(annotationColor.get(2).getAsFloat() * 255);
                     int annotationColorInt = ((((redChannel << 8) + greenChannel) << 8) + blueChannel);
 
-                    JsonArray coordinates = jsonAnnotation.getAsJsonObject().get("imgCoords").getAsJsonArray();
-                    float[] xPoints = new float[coordinates.size()];
-                    float[] yPoints = new float[coordinates.size()];
+                    JsonArray segments = jsonAnnotation.getAsJsonObject()
+                        .get("path").getAsJsonArray()
+                        .get(1).getAsJsonObject()
+                        .get("segments").getAsJsonArray();
+                    float[] xPoints = new float[segments.size()];
+                    float[] yPoints = new float[segments.size()];
 
                     //Loop over all coordinates in annotation
                     int numOfPoints = 0;
                     //Loop through all the coordinates
-                    for (JsonElement coordinate : coordinates) {
-                        xPoints[numOfPoints] = coordinate.getAsJsonObject().get("x").getAsFloat();
-                        yPoints[numOfPoints] = coordinate.getAsJsonObject().get("y").getAsFloat();
-
+                    for (JsonElement segment : segments) {
+                        JsonArray coordinates = segment.getAsJsonArray().get(0).getAsJsonArray();
+                        // The 0th element of the array is the X coordinate
+                        xPoints[numOfPoints] = coordinates.get(0).getAsFloat();
+                        // The 1st element of the array is the Y coordinate
+                        yPoints[numOfPoints] = coordinates.get(1).getAsFloat();
                         numOfPoints++;
                     }
 
@@ -176,13 +181,18 @@ public class ImportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                     annotationDictionary = annotationDictionary.substring(0, 1).toUpperCase() + annotationDictionary.substring(1);
                     annotationName = annotationName.substring(0, 1).toUpperCase() + annotationName.substring(1);
 
+                    /**
+                     * @todo Check if this if/else block is still necessary? `setColorRGB()` in the `if` statement
+                     * seems to never get called, hence being added after this if/else block.
+                     */
                     if (!PathClassFactory.pathClassExists(annotationName))
                         importedAnnotation.setColorRGB(annotationColorInt);
                     else {
                         importedAnnotation.setPathClass(PathClassFactory.getPathClass(annotationName));
                     }
 
-                    importedAnnotation.setName(annotationSlideName + "-" + annotationDictionary + "-" + annotationUID);
+                    importedAnnotation.setName(annotationUID);
+                    importedAnnotation.setColorRGB(annotationColorInt);
                     hierarchy.addPathObject(importedAnnotation, true, false);
                 }
 

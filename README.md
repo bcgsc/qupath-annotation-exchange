@@ -22,13 +22,6 @@ The coordinates, color, and other metadata of the annotations must be saved in a
         {
           "uid": "some-uid",
           "name": "some-name",
-          "imgCoords": [
-            {
-              "x": 0.0,
-              "y": 0.0
-            },
-            // ...
-          ],
           // http://paperjs.org/reference/path/
           "path": [
             "Path",
@@ -79,24 +72,6 @@ A working example can be found below:
         {
           "uid": "dc466dd0-15f7-11ea-94f7-3541d0425afc",
           "name": "dc466dd0-15f7-11ea-94f7-3541d0425afc",
-          "imgCoords": [
-            {
-              "x": 4445.56952,
-              "y": 2904.39074
-            },
-            {
-              "x": 4444.66043,
-              "y": 2909.84528
-            },
-            {
-              "x": 4445.56952,
-              "y": 2921.66346
-            },
-            {
-              "x": 4448.29679,
-              "y": 2922.57255
-            }
-          ],
           // http://paperjs.org/reference/path/
           "path": [
             "Path",

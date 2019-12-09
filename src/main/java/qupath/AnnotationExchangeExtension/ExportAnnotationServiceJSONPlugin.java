@@ -24,9 +24,15 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
 
     private File annotationFile;
     private String lastMessage = "";
+    private String fileName = "";
 
     public ExportAnnotationServiceJSONPlugin( File annotationFile) {
         this.annotationFile = annotationFile;
+    }
+
+    public ExportAnnotationServiceJSONPlugin(File annotationFile, String fileName) {
+        this.annotationFile = annotationFile;
+        this.fileName = fileName;
     }
 
 
@@ -98,46 +104,52 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
         Collection<? extends PathObject> objects = PathObjectTools.getSupportedObjects(selectedObjects, supported);
 
         /**
-         * The JSON File imported by the annotation service has the following structure:
-         *  <JSON Array>                             (Array of annotations)
-         *   <JSON Object>                           (Annotation)
-         *       uid: <int>
-         *       name: <String>
-         *       <JSON Array> imgCoords              (Actual coordinates of annotation on image)
-         *           <JSON Object>                   (Point)
-         *               x: <Double>
-         *               y: <Double>
-         *               ...
-         *       <JSON Array> path                   (Describes information for painting the annotation in Paper.js)
-         *           0:Path
-         *           1:<JSON Object>                 (Path Information)
-         *               applyMatrix:<Boolean>
-         *               <JSON Array> segments       (These are the points used to paint the annotation)
-         *                   <JSON Object>           (Point)
-         *                       x: <Double>
-         *                       y: <Double>
-         *               closed:<Boolean>            (Whether the path is closed or not)
-         *               <JSON Array> fillColor
-         *                   0:<Double>              (red color)
-         *                   1:<Double>              (green color)
-         *                   2:<Double>              (blue color)
-         *                   3:<Double>              (alpha)
-         *               <JSON Array> strokeColor
-         *                   0:<Double>              (red color)
-         *                   1:<Double>              (green color)
-         *                   2:<Double>              (blue color)
-         *               strokeScaling:<Boolean>
-         *       zoom:<Double>                       (What zoom level the annotation was drawn at. Not important for us)
-         *       <JSON Array> context                (This array determines which annotations are within which other
-         *                                            annotations. Not important for now but may be needed as more
-         *                                            sophisticated paths need to be exported)
-         *       dictionary:<String>                 (Which dictionary these annotations belong to. For now we always
-         *                                            use "imported")
-         *   <JSON Object>                           (Annotation)
+         * The data-structure of the exported JSON:
+         * [
+         *   {
+         *     "SourceSlide": "name-of-file.svs"
+         *   },
+         *   {
+         *     "dictionaries": [
+         *       [
+         *         {
+         *           "uid": "some-uid",
+         *           "name": "some-name",
+         *           // http://paperjs.org/reference/path/
+         *           "path": [
+         *             "Path",
+         *             {
+         *               "applyMatrix": true,
+         *               "data": {
+         *                 "id": "some-uid"
+         *               },
+         *               "segments": [
+         *                 // http://paperjs.org/reference/segment/#segment
+         *                 [
+         *                   [0.0, 0.0],
+         *                   [0.0, 0.0],
+         *                   [0.0, 0.0]
+         *                 ],
+         *                 // ...
+         *               ],
+         *               "closed": true,
+         *               "fillColor": [0.0, 0.0, 0.0, 0.0],
+         *               "strokeColor": [0.0, 0.0, 0.0],
+         *               "strokeWidth": 50
+         *             }
+         *           ],
+         *           "zoom": 0,
+         *           "context": [],
+         *           "dictionary": "default"
+         *         }
+         *       ]
+         *     ]
+         *   }
+         * ]
          */
-
         try {
-            JsonArray annotationLayout = new JsonArray();
+            JsonArray arrayToExport = new JsonArray();
+            JsonArray dictionariesArray = new JsonArray();
 
             int count = 0;
             for(PathObject annotation : objects) {
@@ -151,25 +163,30 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                     jsonAnnotation.addProperty("uid", count);
                     jsonAnnotation.addProperty("name", (annotation.getPathClass() == null) ? "Unclassified" : annotation.getPathClass().toString());
 
-                    JsonArray imgCoords = new JsonArray();
                     JsonArray pathCoords = new JsonArray();
 
                     for (Point2 point : annotationPolygons[1][i].getPolygonPoints()) {
-                        JsonObject annotationPoint = new JsonObject();
-                        annotationPoint.addProperty("x", point.getX());
-                        annotationPoint.addProperty("y", point.getY());
-                        imgCoords.add(annotationPoint);
+                        JsonArray segment = new JsonArray();
+                        JsonArray pathCoordPoint = new JsonArray();
+                        pathCoordPoint.add(point.getX());
+                        pathCoordPoint.add(point.getY());
+                        segment.add(pathCoordPoint);
+                        /**
+                         * In order to mimic the data-structure of a PaperJS.segment, there needs to be two additional
+                         * arrays
+                         *
+                         * Since this data is not used, they can contain zeroed coordinates
+                         *
+                         * http://paperjs.org/reference/segment/#segment
+                         */
+                        JsonArray zeroArray = new JsonArray();
+                        zeroArray.add(0.0);
+                        zeroArray.add(0.0);
+                        segment.add(zeroArray);
+                        segment.add(zeroArray);
 
-                        //It appears that to convert between the image coordinates and the coordinates used to draw the annotation, we divide the image coordinates
-                        //in both dimensions by the total *width* of the image and then multiply by a factor of 1000.
-
-                        JsonObject pathCoordPoint = new JsonObject();
-                        pathCoordPoint.addProperty("0", point.getX() / imageData.getServer().getWidth() * 1000);
-                        pathCoordPoint.addProperty("1", point.getY() / imageData.getServer().getWidth() * 1000);
-                        pathCoords.add(pathCoordPoint);
+                        pathCoords.add(segment);
                     }
-
-                    jsonAnnotation.add("imgCoords", imgCoords);
 
                     JsonArray path = new JsonArray();
                     path.add("Path");
@@ -179,25 +196,29 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                     pathProperties.addProperty("closed", true);
                     JsonArray fillColour = new JsonArray();
 
-                    if (annotation.getPathClass() == null) {
-                        fillColour.add(1);
-                        fillColour.add(0);
-                        fillColour.add(0);
-                        fillColour.add(0.5);
-                    } else {
-                        int annotationRGB = annotation.getPathClass().getColor();
-                        fillColour.add((double) (ColorTools.red(annotationRGB)) / 255.0);
-                        fillColour.add((double) (ColorTools.green(annotationRGB)) / 255.0);
-                        fillColour.add((double) (ColorTools.blue(annotationRGB)) / 255.0);
-                        fillColour.add(0.5);
-                    }
+                    JsonArray strokeColor = new JsonArray();
+
+                    /**
+                     * PathObject.color is null by default, thus the color of the annotation needs to be manually set if
+                     * the user used the default color of RGB(255, 0, 0) (i.e. Red)
+                     */
+                    final int annotationRGB = annotation.getColorRGB() != null
+                        ? annotation.getColorRGB()
+                        : 16711680;
+                    final double redValue = (double) (ColorTools.red(annotationRGB)) / 255.0;
+                    final double greenValue = (double) (ColorTools.green(annotationRGB)) / 255.0;
+                    final double blueValue = (double) (ColorTools.blue(annotationRGB)) / 255.0;
+                    fillColour.add(redValue);
+                    fillColour.add(greenValue);
+                    fillColour.add(blueValue);
+                    fillColour.add(0.5);
+                    strokeColor.add(redValue);
+                    strokeColor.add(greenValue);
+                    strokeColor.add(blueValue);
+
+                    pathProperties.add("strokeColor", strokeColor);
 
                     pathProperties.add("fillColor", fillColour);
-                    JsonArray strokeColor = new JsonArray();
-                    strokeColor.add(0);
-                    strokeColor.add(0);
-                    strokeColor.add(0);
-                    pathProperties.add("strokeColor", strokeColor);
                     pathProperties.addProperty("strokeScaling", false);
 
                     path.add(pathProperties);
@@ -208,13 +229,21 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                     jsonAnnotation.add("context", context);
                     jsonAnnotation.addProperty("dictionary", "imported");
 
-                    annotationLayout.add(jsonAnnotation);
+                    dictionariesArray.add(jsonAnnotation);
                 }
+                JsonObject sourceSlide = new JsonObject();
+                sourceSlide.addProperty("SourceSlide", this.fileName + ".svs");
+                arrayToExport.add(sourceSlide);
+                JsonObject dictionaries = new JsonObject();
+                JsonArray arrayOfAnnotations = new JsonArray();
+                arrayOfAnnotations.add(dictionariesArray);
+                dictionaries.add("dictionaries", arrayOfAnnotations);
+                arrayToExport.add(dictionaries);
             }
 
             Gson gson = new GsonBuilder().create();
             Writer writer = new FileWriter(outputFile);
-            gson.toJson(annotationLayout,writer);
+            gson.toJson(arrayToExport,writer);
             writer.close();
         } catch(java.io.IOException ex){
             lastMessage = "Error Reading JSON File";
