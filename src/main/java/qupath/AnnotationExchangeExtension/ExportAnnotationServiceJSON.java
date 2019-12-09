@@ -48,7 +48,7 @@ public class ExportAnnotationServiceJSON implements PathCommand{
          * contain the slide name.
          */
         final String slideName = qupath.getViewer().getServer().getDisplayedImageName();
-        fileChooser.setInitialFileName(slideName + "_imported");
+        fileChooser.setInitialFileName(slideName + ".svs.annotations");
         File inputFile = fileChooser.showSaveDialog(null );
 
         if (inputFile == null) {
