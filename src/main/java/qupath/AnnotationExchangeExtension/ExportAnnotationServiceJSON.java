@@ -5,10 +5,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import qupath.lib.gui.QuPathGUI;
 import qupath.lib.gui.commands.interfaces.PathCommand;
+import qupath.lib.gui.helpers.DisplayHelpers;
 import qupath.lib.gui.viewer.QuPathViewer;
+import qupath.lib.objects.PathAnnotationObject;
+import qupath.lib.objects.PathObject;
+import qupath.lib.objects.helpers.PathObjectTools;
 import qupath.lib.plugins.PluginRunnerFX;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by cschlosser on 25/06/2018.
@@ -30,10 +37,35 @@ public class ExportAnnotationServiceJSON implements PathCommand{
         this.qupath = qupath;
     }
 
+    public Collection<Class<? extends PathObject>> getSupportedParentObjectClasses() {
+        List<Class<? extends PathObject>> list = new ArrayList<>(1);
+        list.add(PathAnnotationObject.class);
+        return list;
+    }
+
     public void run(){
         QuPathViewer viewer = qupath.getViewer();
         if (viewer == null || viewer.getServer() == null) {
             logger.error("No Slide Loaded.");
+            return;
+        }
+
+        PluginRunnerFX runner = new PluginRunnerFX(qupath,false);
+
+        Collection<PathObject> selectedObjects = runner.getImageData()
+            .getHierarchy()
+            .getSelectionModel()
+            .getSelectedObjects();
+
+        Collection<Class<? extends PathObject>> supported = getSupportedParentObjectClasses();
+
+        Collection<? extends PathObject> objects = PathObjectTools.getSupportedObjects(selectedObjects, supported);
+
+        if (objects.size() == 0) {
+            DisplayHelpers.showErrorMessage(
+                "No Annotations Selected",
+                "Please select annotations to export in the \"Annotations\" tab"
+            );
             return;
         }
 
@@ -56,7 +88,6 @@ public class ExportAnnotationServiceJSON implements PathCommand{
             return;
         }
 
-        PluginRunnerFX runner = new PluginRunnerFX(qupath,false);
         ExportAnnotationServiceJSONPlugin exportJSON = new ExportAnnotationServiceJSONPlugin(inputFile, slideName);
         exportJSON.runPlugin(runner, null);
     }
