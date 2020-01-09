@@ -115,7 +115,6 @@ public class ImportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                     String annotationUID = jsonAnnotation.getAsJsonObject().get("uid").getAsString();
 
                     JsonArray annotationColor = jsonAnnotation.getAsJsonObject().get("path")
-                        .getAsJsonArray().get(1)
                         .getAsJsonObject().get("fillColor")
                         .getAsJsonArray();
 
@@ -125,8 +124,7 @@ public class ImportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                     int annotationColorInt = ((((redChannel << 8) + greenChannel) << 8) + blueChannel);
 
                     JsonArray segments = jsonAnnotation.getAsJsonObject()
-                        .get("path").getAsJsonArray()
-                        .get(1).getAsJsonObject()
+                        .get("path").getAsJsonObject()
                         .get("segments").getAsJsonArray();
                     float[] xPoints = new float[segments.size()];
                     float[] yPoints = new float[segments.size()];
