@@ -91,9 +91,6 @@ public class ImportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
             JsonArray jsonAnnotationData = jsonParser.parse(jsonReader)
                     .getAsJsonArray();
 
-            String annotationSlideName = jsonAnnotationData.get(0)
-                    .getAsJsonObject().get("SourceSlide").getAsString();
-
             JsonArray jsonAnnotationDictionaries = jsonAnnotationData.get(1)
                     .getAsJsonObject().get("dictionaries")
                     .getAsJsonArray();
