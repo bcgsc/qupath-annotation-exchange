@@ -129,7 +129,8 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
          *           "closed": true,
          *           "fillColor": [0.0, 0.0, 0.0, 0.0],
          *           "strokeColor": [0.0, 0.0, 0.0],
-         *           "strokeWidth": 50
+         *           "strokeWidth": 50,
+         *           "label": "Tumor" | "Stroma" | ... // (See `qupath.lib.objects.PathClass`)
          *       }
          *       "zoom": 0,
          *       "context": [],
@@ -216,6 +217,10 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                     JsonArray context = new JsonArray();
                     jsonAnnotation.add("context", context);
                     jsonAnnotation.addProperty("dictionary", "imported");
+                    String annotationPathClassName = annotation.getPathClass() != null
+                        ? annotation.getPathClass().getName()
+                        : "Tumor";
+                    jsonAnnotation.addProperty("label", annotationPathClassName);
 
                     dictionariesArray.add(jsonAnnotation);
                 }
