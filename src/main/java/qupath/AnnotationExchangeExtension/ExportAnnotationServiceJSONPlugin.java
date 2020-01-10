@@ -151,7 +151,7 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                 for(int i = 0; i<annotationPolygons[1].length; i++) {
                     count++;
                     JsonObject jsonAnnotation = new JsonObject();
-                    jsonAnnotation.addProperty("uid", count);
+                    jsonAnnotation.addProperty("uid", Integer.toString(count));
                     jsonAnnotation.addProperty("name", (annotation.getPathClass() == null) ? "Unclassified" : annotation.getPathClass().toString());
 
                     JsonArray pathCoords = new JsonArray();
