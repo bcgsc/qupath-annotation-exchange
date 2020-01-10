@@ -148,7 +148,7 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
          * ]
          */
         try {
-            JsonArray arrayToExport = new JsonArray();
+            JsonObject objectToExport = new JsonObject();
             JsonArray dictionariesArray = new JsonArray();
 
             int count = 0;
@@ -231,17 +231,13 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
 
                     dictionariesArray.add(jsonAnnotation);
                 }
-                JsonObject sourceSlide = new JsonObject();
-                sourceSlide.addProperty("SourceSlide", this.fileName + ".svs");
-                arrayToExport.add(sourceSlide);
-                JsonObject dictionaries = new JsonObject();
-                dictionaries.add("dictionaries", dictionariesArray);
-                arrayToExport.add(dictionaries);
+                objectToExport.addProperty("SourceSlide", this.fileName + ".svs");
+                objectToExport.add("dictionaries", dictionariesArray);
             }
 
             Gson gson = new GsonBuilder().create();
             Writer writer = new FileWriter(outputFile);
-            gson.toJson(arrayToExport,writer);
+            gson.toJson(objectToExport,writer);
             writer.close();
         } catch(java.io.IOException ex){
             lastMessage = "Error Reading JSON File";
