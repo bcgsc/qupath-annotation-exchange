@@ -105,47 +105,41 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
 
         /**
          * The data-structure of the exported JSON:
-         * [
-         *   {
-         *     "SourceSlide": "name-of-file.svs"
-         *   },
-         *   {
-         *     "dictionaries": [
-         *       [
+         * {
+         *   "SourceSlide": "name-of-file.svs"
+         *   "dictionaries": [
+         *     {
+         *       "uid": "some-uid",
+         *       "name": "some-name",
+         *       // http://paperjs.org/reference/path/
+         *       "path": [
+         *         "Path",
          *         {
-         *           "uid": "some-uid",
-         *           "name": "some-name",
-         *           // http://paperjs.org/reference/path/
-         *           "path": [
-         *             "Path",
-         *             {
-         *               "applyMatrix": true,
-         *               "data": {
-         *                 "id": "some-uid"
-         *               },
-         *               "segments": [
-         *                 // http://paperjs.org/reference/segment/#segment
-         *                 [
-         *                   [0.0, 0.0],
-         *                   [0.0, 0.0],
-         *                   [0.0, 0.0]
-         *                 ],
-         *                 // ...
-         *               ],
-         *               "closed": true,
-         *               "fillColor": [0.0, 0.0, 0.0, 0.0],
-         *               "strokeColor": [0.0, 0.0, 0.0],
-         *               "strokeWidth": 50
-         *             }
+         *           "applyMatrix": true,
+         *           "data": {
+         *             "id": "some-uid"
+         *           },
+         *           "segments": [
+         *             // http://paperjs.org/reference/segment/#segment
+         *             [
+         *               [0.0, 0.0],
+         *               [0.0, 0.0],
+         *               [0.0, 0.0]
+         *             ],
+         *             // ...
          *           ],
-         *           "zoom": 0,
-         *           "context": [],
-         *           "dictionary": "default"
+         *           "closed": true,
+         *           "fillColor": [0.0, 0.0, 0.0, 0.0],
+         *           "strokeColor": [0.0, 0.0, 0.0],
+         *           "strokeWidth": 50
          *         }
-         *       ]
-         *     ]
-         *   }
-         * ]
+         *       ],
+         *       "zoom": 0,
+         *       "context": [],
+         *       "dictionary": "default"
+         *     }
+         *   ]
+         * }
          */
         try {
             JsonObject objectToExport = new JsonObject();
