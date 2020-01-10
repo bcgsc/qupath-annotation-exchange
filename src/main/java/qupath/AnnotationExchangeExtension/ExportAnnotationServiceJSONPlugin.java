@@ -235,9 +235,7 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                 sourceSlide.addProperty("SourceSlide", this.fileName + ".svs");
                 arrayToExport.add(sourceSlide);
                 JsonObject dictionaries = new JsonObject();
-                JsonArray arrayOfAnnotations = new JsonArray();
-                arrayOfAnnotations.add(dictionariesArray);
-                dictionaries.add("dictionaries", arrayOfAnnotations);
+                dictionaries.add("dictionaries", dictionariesArray);
                 arrayToExport.add(dictionaries);
             }
 
