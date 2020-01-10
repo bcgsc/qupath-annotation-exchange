@@ -100,7 +100,7 @@ public class ImportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
 
                 // Dictionaries are created in the Annotation Service JS library. There isn't a clear convention on what they should mean but we will
                 // add a parameter to their imported objects so that they can be used later
-                String annotationDictionary = jsonAnnotation.getAsJsonObject().get("dictionary").getAsString();
+                String annotationLabel = jsonAnnotation.getAsJsonObject().get("label").getAsString();
 
                 // Dictionaries are created in the Annotation Service JS library. There isn't a clear convention on what they should mean but we will
                 // add a parameter to their imported objects so that they can be used later
@@ -167,18 +167,9 @@ public class ImportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                         importedAnnotation = new PathAnnotationObject(annotaionPoly);
                         break;
                 }
-                // Set first letter uppercase to match QuPath (In case they aren't already)
-                annotationDictionary = annotationDictionary.substring(0, 1).toUpperCase() + annotationDictionary.substring(1);
-                annotationName = annotationName.substring(0, 1).toUpperCase() + annotationName.substring(1);
 
-                /**
-                 * @todo Check if this if/else block is still necessary? `setColorRGB()` in the `if` statement
-                 * seems to never get called, hence being added after this if/else block.
-                 */
-                if (!PathClassFactory.pathClassExists(annotationName))
-                    importedAnnotation.setColorRGB(annotationColorInt);
-                else {
-                    importedAnnotation.setPathClass(PathClassFactory.getPathClass(annotationName));
+                if (PathClassFactory.pathClassExists(annotationLabel)) {
+                    importedAnnotation.setPathClass(PathClassFactory.getPathClass(annotationLabel));
                 }
 
                 importedAnnotation.setName(annotationUID);
