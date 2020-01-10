@@ -112,9 +112,7 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
          *       "uid": "some-uid",
          *       "name": "some-name",
          *       // http://paperjs.org/reference/path/
-         *       "path": [
-         *         "Path",
-         *         {
+         *       "path": {
          *           "applyMatrix": true,
          *           "data": {
          *             "id": "some-uid"
@@ -132,8 +130,7 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
          *           "fillColor": [0.0, 0.0, 0.0, 0.0],
          *           "strokeColor": [0.0, 0.0, 0.0],
          *           "strokeWidth": 50
-         *         }
-         *       ],
+         *       }
          *       "zoom": 0,
          *       "context": [],
          *       "dictionary": "default"
@@ -182,8 +179,6 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                         pathCoords.add(segment);
                     }
 
-                    JsonArray path = new JsonArray();
-                    path.add("Path");
                     JsonObject pathProperties = new JsonObject();
                     pathProperties.addProperty("applyMatrix", true);
                     pathProperties.add("segments", pathCoords);
@@ -215,8 +210,7 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                     pathProperties.add("fillColor", fillColour);
                     pathProperties.addProperty("strokeScaling", false);
 
-                    path.add(pathProperties);
-                    jsonAnnotation.add("path", path);
+                    jsonAnnotation.add("path", pathProperties);
 
                     jsonAnnotation.addProperty("zoom", 1.0);
                     JsonArray context = new JsonArray();
