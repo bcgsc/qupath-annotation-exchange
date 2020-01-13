@@ -143,17 +143,15 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
             JsonObject objectToExport = new JsonObject();
             JsonArray dictionariesArray = new JsonArray();
 
-            int count = 0;
             for(PathObject annotation : objects) {
                 PathShape pathShape = (PathShape)annotation.getROI();
                 Area area = PathROIToolsAwt.getArea(pathShape);
                 PolygonROI[][] annotationPolygons = PathROIToolsAwt.splitAreaToPolygons(area);
 
                 for(int i = 0; i<annotationPolygons[1].length; i++) {
-                    count++;
                     JsonObject jsonAnnotation = new JsonObject();
-                    jsonAnnotation.addProperty("uid", Integer.toString(count));
-                    jsonAnnotation.addProperty("name", Integer.toString(count));
+                    jsonAnnotation.addProperty("uid", annotation.getName());
+                    jsonAnnotation.addProperty("name", annotation.getName());
 
                     JsonArray pathCoords = new JsonArray();
 
