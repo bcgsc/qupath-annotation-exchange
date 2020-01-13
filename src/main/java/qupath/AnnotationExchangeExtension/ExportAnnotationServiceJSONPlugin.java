@@ -105,50 +105,42 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
 
         /**
          * The data-structure of the exported JSON:
-         * [
-         *   {
-         *     "SourceSlide": "name-of-file.svs"
-         *   },
-         *   {
-         *     "dictionaries": [
-         *       [
-         *         {
-         *           "uid": "some-uid",
-         *           "name": "some-name",
-         *           // http://paperjs.org/reference/path/
-         *           "path": [
-         *             "Path",
-         *             {
-         *               "applyMatrix": true,
-         *               "data": {
-         *                 "id": "some-uid"
-         *               },
-         *               "segments": [
-         *                 // http://paperjs.org/reference/segment/#segment
-         *                 [
-         *                   [0.0, 0.0],
-         *                   [0.0, 0.0],
-         *                   [0.0, 0.0]
-         *                 ],
-         *                 // ...
-         *               ],
-         *               "closed": true,
-         *               "fillColor": [0.0, 0.0, 0.0, 0.0],
-         *               "strokeColor": [0.0, 0.0, 0.0],
-         *               "strokeWidth": 50
-         *             }
+         * {
+         *   "SourceSlide": "name-of-file.svs"
+         *   "dictionaries": [
+         *     {
+         *       "uid": "some-uid",
+         *       "name": "some-name",
+         *       // http://paperjs.org/reference/path/
+         *       "path": {
+         *           "applyMatrix": true,
+         *           "data": {
+         *             "id": "some-uid"
+         *           },
+         *           "segments": [
+         *             // http://paperjs.org/reference/segment/#segment
+         *             [
+         *               [0.0, 0.0],
+         *               [0.0, 0.0],
+         *               [0.0, 0.0]
+         *             ],
+         *             // ...
          *           ],
-         *           "zoom": 0,
-         *           "context": [],
-         *           "dictionary": "default"
-         *         }
-         *       ]
-         *     ]
-         *   }
-         * ]
+         *           "closed": true,
+         *           "fillColor": [0.0, 0.0, 0.0, 0.0],
+         *           "strokeColor": [0.0, 0.0, 0.0],
+         *           "strokeWidth": 50,
+         *           "label": "Tumor" | "Stroma" | ... // (See `qupath.lib.objects.PathClass`)
+         *       }
+         *       "zoom": 0,
+         *       "context": [],
+         *       "dictionary": "default"
+         *     }
+         *   ]
+         * }
          */
         try {
-            JsonArray arrayToExport = new JsonArray();
+            JsonObject objectToExport = new JsonObject();
             JsonArray dictionariesArray = new JsonArray();
 
             int count = 0;
@@ -160,8 +152,8 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                 for(int i = 0; i<annotationPolygons[1].length; i++) {
                     count++;
                     JsonObject jsonAnnotation = new JsonObject();
-                    jsonAnnotation.addProperty("uid", count);
-                    jsonAnnotation.addProperty("name", (annotation.getPathClass() == null) ? "Unclassified" : annotation.getPathClass().toString());
+                    jsonAnnotation.addProperty("uid", Integer.toString(count));
+                    jsonAnnotation.addProperty("name", Integer.toString(count));
 
                     JsonArray pathCoords = new JsonArray();
 
@@ -188,8 +180,6 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                         pathCoords.add(segment);
                     }
 
-                    JsonArray path = new JsonArray();
-                    path.add("Path");
                     JsonObject pathProperties = new JsonObject();
                     pathProperties.addProperty("applyMatrix", true);
                     pathProperties.add("segments", pathCoords);
@@ -221,29 +211,26 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                     pathProperties.add("fillColor", fillColour);
                     pathProperties.addProperty("strokeScaling", false);
 
-                    path.add(pathProperties);
-                    jsonAnnotation.add("path", path);
+                    jsonAnnotation.add("path", pathProperties);
 
                     jsonAnnotation.addProperty("zoom", 1.0);
                     JsonArray context = new JsonArray();
                     jsonAnnotation.add("context", context);
                     jsonAnnotation.addProperty("dictionary", "imported");
+                    String annotationPathClassName = annotation.getPathClass() != null
+                        ? annotation.getPathClass().getName()
+                        : "Tumor";
+                    jsonAnnotation.addProperty("label", annotationPathClassName);
 
                     dictionariesArray.add(jsonAnnotation);
                 }
-                JsonObject sourceSlide = new JsonObject();
-                sourceSlide.addProperty("SourceSlide", this.fileName + ".svs");
-                arrayToExport.add(sourceSlide);
-                JsonObject dictionaries = new JsonObject();
-                JsonArray arrayOfAnnotations = new JsonArray();
-                arrayOfAnnotations.add(dictionariesArray);
-                dictionaries.add("dictionaries", arrayOfAnnotations);
-                arrayToExport.add(dictionaries);
+                objectToExport.addProperty("SourceSlide", this.fileName + ".svs");
+                objectToExport.add("dictionaries", dictionariesArray);
             }
 
             Gson gson = new GsonBuilder().create();
             Writer writer = new FileWriter(outputFile);
-            gson.toJson(arrayToExport,writer);
+            gson.toJson(objectToExport,writer);
             writer.close();
         } catch(java.io.IOException ex){
             lastMessage = "Error Reading JSON File";
