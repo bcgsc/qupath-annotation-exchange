@@ -39,9 +39,6 @@ The coordinates, color, and other metadata of the annotations must be saved in a
           "strokeWidth": 50,
           "label": "Tumor" // (See `qupath.lib.objects.PathClass`)
       }
-      "zoom": 0,
-      "context": [],
-      "dictionary": "default"
     }
   ]
 }
@@ -94,10 +91,7 @@ A working example can be found below:
             "fillColor": [0.81569, 0.41569, 0.41569, 0.5],
             "strokeColor": [0.81569, 0.41569, 0.41569],
             "strokeWidth": 50
-        },
-        "zoom": 0,
-        "context": [],
-        "dictionary": "default"
+        }
       }
     ]
   ]
