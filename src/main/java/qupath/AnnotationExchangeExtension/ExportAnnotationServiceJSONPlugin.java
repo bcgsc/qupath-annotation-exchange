@@ -19,6 +19,7 @@ import java.io.FileWriter;
 import java.io.Writer;
 import java.util.*;
 import java.util.List;
+import java.util.UUID;
 
 public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedImage> {
 
@@ -150,8 +151,15 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
 
                 for(int i = 0; i<annotationPolygons[1].length; i++) {
                     JsonObject jsonAnnotation = new JsonObject();
-                    jsonAnnotation.addProperty("uid", annotation.getName());
-                    jsonAnnotation.addProperty("name", annotation.getName());
+
+                    final String uid = UUID.randomUUID().toString();
+
+                    final String name = annotation.getName() != null
+                      ? annotation.getName()
+                      : uid;
+
+                    jsonAnnotation.addProperty("uid", uid);
+                    jsonAnnotation.addProperty("name", name);
 
                     JsonArray pathCoords = new JsonArray();
 
