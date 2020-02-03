@@ -19,6 +19,7 @@ import java.io.FileWriter;
 import java.io.Writer;
 import java.util.*;
 import java.util.List;
+import java.util.UUID;
 
 public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedImage> {
 
@@ -140,17 +141,22 @@ public class ExportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
             JsonObject objectToExport = new JsonObject();
             JsonArray dictionariesArray = new JsonArray();
 
-            int count = 0;
             for(PathObject annotation : objects) {
                 PathShape pathShape = (PathShape)annotation.getROI();
                 Area area = PathROIToolsAwt.getArea(pathShape);
                 PolygonROI[][] annotationPolygons = PathROIToolsAwt.splitAreaToPolygons(area);
 
                 for(int i = 0; i<annotationPolygons[1].length; i++) {
-                    count++;
                     JsonObject jsonAnnotation = new JsonObject();
-                    jsonAnnotation.addProperty("uid", Integer.toString(count));
-                    jsonAnnotation.addProperty("name", Integer.toString(count));
+
+                    final String uid = UUID.randomUUID().toString();
+
+                    final String name = annotation.getName() != null
+                      ? annotation.getName()
+                      : uid;
+
+                    jsonAnnotation.addProperty("uid", uid);
+                    jsonAnnotation.addProperty("name", name);
 
                     JsonArray pathCoords = new JsonArray();
 
