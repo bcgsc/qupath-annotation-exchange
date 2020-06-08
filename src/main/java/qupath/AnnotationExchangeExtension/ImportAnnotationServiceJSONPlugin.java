@@ -125,7 +125,7 @@ public class ImportAnnotationServiceJSONPlugin extends AbstractPlugin<BufferedIm
                 int numOfPoints = 0;
                 //Loop through all the coordinates
                 for (JsonElement segment : segments) {
-                    JsonArray coordinates = segment.getAsJsonArray().get(0).getAsJsonArray();
+                    JsonArray coordinates = segment.getAsJsonArray();
                     // The 0th element of the array is the X coordinate
                     xPoints[numOfPoints] = coordinates.get(0).getAsFloat();
                     // The 1st element of the array is the Y coordinate
