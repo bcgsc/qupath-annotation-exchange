@@ -20,7 +20,6 @@ The coordinates, color, and other metadata of the annotations must be saved in a
       "name": "some-name",
       // http://paperjs.org/reference/path/
       "path": {
-          "applyMatrix": true,
           "data": {
             "id": "some-uid"
           },
@@ -37,8 +36,8 @@ The coordinates, color, and other metadata of the annotations must be saved in a
           "fillColor": [0.0, 0.0, 0.0, 0.0],
           "strokeColor": [0.0, 0.0, 0.0],
           "strokeWidth": 50,
-          "label": "Tumor" // (See `qupath.lib.objects.PathClass`)
       }
+      "label": "Tumor" // (See `qupath.lib.objects.PathClass`)
     }
   ]
 }
@@ -91,7 +90,8 @@ A working example can be found below:
             "fillColor": [0.81569, 0.41569, 0.41569, 0.5],
             "strokeColor": [0.81569, 0.41569, 0.41569],
             "strokeWidth": 50
-        }
+        },
+        "label": "Tumor"
       }
     ]
   ]
