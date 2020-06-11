@@ -152,6 +152,9 @@ git checkout v0.1.2
 * Click the Radio button for `Import project from external model`
 * Choose `Maven`
 * Leave all the defaults, and keep clicking `Next` until `Finish`
+
+3. Change the compiler settings
+
 * File -> Settings... -> Build, Execution, Deployment -> Compiler ->
 Java Compiler
 * Set `Project bytecode version` to `1.8`
@@ -171,6 +174,8 @@ modules under the `Default` dropdown, as well as the
 
 ![](docs/build-qupath/module-source-language-level.png)
 
+4. Add module dependencies
+
 * File -> Project Structure... -> Modules -> Click the `qupath` module
 
 Click the `Dependencies` tab, and add Module Dependencies:
@@ -181,6 +186,8 @@ Add all `qupath-*` modules, and check them off:
 
 ![](docs/build-qupath/module-dependencies.png)
 
+5. Build QuPath `.class` files
+
 * You should now be able to build the project by going to Build -> Build Project
 (or `Ctrl+F9`), and if there are no issues, you should see the following on the
 bottom left of the `IntelliJ` window:
@@ -188,6 +195,8 @@ bottom left of the `IntelliJ` window:
 ![](docs/build-qupath/compilation-successful.png)
 
 This means you should now be able to make `QuPath.jar`
+
+6. Set up making `QuPath.jar`
 
 * File -> Project Structure... -> Artifacts
 
