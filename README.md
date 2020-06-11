@@ -225,3 +225,111 @@ And the resulting file will be at:
 `/path/to/qupath/out/artifacts/qupath/qupath.jar`
 
 We now have the dependencies needed to build `AnnotationExchangeExtension`
+
+### AnnotationExchangeExtension.jar
+
+1. Clone `qupath-annotation`
+
+```bash
+git@github.com:bcgsc/qupath-annotation-exchange.git
+# If you do not have an SSH key from your current terminal associated with your
+# GitHub account, use the https link here:
+https://github.com/bcgsc/qupath-annotation-exchange.git
+```
+
+2. Load project into IntelliJ
+
+* File -> New -> Project From Existing Sources
+* Choose the `qupath-annotation-exchange/` directory you just cloned
+* Click the Radio button for `Import project from external model`
+* Choose `Gradle`
+* Leave all defaults and click `Next` until the `Finish` button
+* Replace the `.idea/` directory if it prompts you to do so
+
+3. Set `Qupath.jar` as a dependency
+
+* File -> Project Structure... -> Libraries -> + -> Java
+
+![](docs/build-annotation-extension/add-qupath-as-dependency-1.png)
+
+Find the directory where `qupath.jar` was created:
+
+![](docs/build-annotation-extension/add-qupath-as-dependency-2.png)
+
+Add `qupath` to all `AnnotationExchangeExtension` modules:
+
+![](docs/build-annotation-extension/add-qupath-as-dependency-3.png)
+
+* File -> Project Structure... -> Modules
+
+For each of the module options, highlighted with `<-`:
+
+```
+AnnotationExchangeExtension
+  AnnotationExchangeExtension_main <-
+  AnnotationExchangeExtension_test <-
+AnnotationExchangeExtension <-
+```
+
+Ensure that the `qupath` library is checked:
+
+![](docs/build-annotation-extension/add-qupath-as-dependency-4.png)
+
+4. Make a build of `AnnotationExchangeExtension`
+
+If the build was successful, you should see this at the bottom left of the
+`IntelliJ` window:
+
+![](docs/build-annotation-extension/build-complete.png)
+
+5. Set up creating an `AnnotationExchangeExtension` artifact
+
+* File -> Project Structure... -> Artifacts -> + -> JAR -> Empty
+
+![](docs/build-annotation-extension/artifact-annotation-exchange-extension-1.png)
+
+* Set the `Name:` to `AnnotationExchangeExtension`
+
+* `+` -> Add Module Output
+![](docs/build-annotation-extension/artifacts-add-module-output.png)
+
+* Choose the module `AnnotationExchangeExtension_main`
+
+![](docs/build-annotation-extension/artifacts-choose-module.png)
+
+* `+` -> Directory Content
+
+![](docs/build-annotation-extension/artifact-add-directory-content.png)
+
+* Choose `/path/to/qupath-annotation-exchange/src/main/resources`
+
+![](docs/build-annotation-extension/artifact-add-directory-content-path.png)
+
+6. Build `AnnotationExchangeExtension.jar`
+
+Build -> Build Artifacts... -> AnnotationExchangeExtension -> Build
+
+![](docs/build-annotation-extension/build-artifact.png)
+
+7. Import `AnnotationExchangeExtension.jar` in `QuPath`
+
+Use your file system explorer to navigate to
+`/path/to/qupath-annotation-exchange/out/artifacts/AnnotationExchangeExtension`
+
+Open an [installed version of `QuPath`](https://github.com/qupath/qupath/releases/tag/v0.1.2):
+
+![](docs/build-annotation-extension/qupath-window.png)
+
+And drag the built `AnnotationExchangeExtension.jar` file into the `QuPath`
+window. If QuPath prompts you to, accept a restart.
+
+Click the Extensions button, and if you see "Annotations Exchange", with
+options "Import JSON Annotation" and "Export JSON Annotation", congratulations,
+you have successfully made a build of `AnnotationExchangeExtension` and added
+it to `QuPath`.
+
+If you have an `.svs` file, and annotations made using an application that
+conforms to the JSON structure (i.e. the internal GSC React application), you
+can now overlay those annotations over the `.svs` file:
+
+![](docs/build-annotation-extension/qupath-imported-annotations.png)
