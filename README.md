@@ -117,3 +117,102 @@ The following installations are required to build the
     * Linux: https://download.jetbrains.com/idea/ideaIC-2017.3.7.tar.gz
     * Windows: https://download.jetbrains.com/idea/ideaIC-2017.3.7.exe
     * MacOS: https://download.jetbrains.com/idea/ideaIC-2017.3.7.dmg
+
+### QuPath.jar
+
+A build of [QuPath (v0.1.2)](https://github.com/qupath/qupath/tree/v0.1.2) is
+required to ensure the Java compiler does not complain about the classes
+`AnnotationExchangeExtension` extends.
+
+Previous developers have built an artifact of `QuPath.jar`, and set that as a
+dependency of `AnnotationExchangeExtension`. However, you may be able to set the
+`QuPath` project as a dependency of `AnnotationExchangeExtension` without making
+a build of it. If you are successful in doing the latter, you can skip this
+step.
+
+1. Clone QuPath
+
+```bash
+git clone git@github.com:qupath/qupath.git
+# If you do not have an SSH key from your current terminal associated with your
+# GitHub account, use the https link here:
+git clone https://github.com/qupath/qupath.git
+# The extension currently only works for the 0.1.2 release of QuPath
+# It is crucial you do this before loading the project into IntelliJ, as later
+# releases of QuPath use `Gradle` as the dependency manager, whereas earlier
+# releases use `Maven`, which may confuse IntelliJ regarding which dependency
+# manager to use
+git checkout v0.1.2
+```
+
+2. Load the project into IntelliJ
+
+* File -> New -> Project From Existing Sources
+* Choose the `qupath/` directory you just cloned
+* Click the Radio button for `Import project from external model`
+* Choose `Maven`
+* Leave all the defaults, and keep clicking `Next` until `Finish`
+* File -> Settings... -> Build, Execution, Deployment -> Compiler ->
+Java Compiler
+* Set `Project bytecode version` to `1.8`
+* For all rows in the `Per-module bytecode version` table, ensure each one
+has `Target bytecode version` set to `1.8`
+* Then go to Build, Execution, Deployment -> Compiler -> Annotation Processors,
+and ensure that `Enable annotation processing` is not checked off for the
+modules under the `Default` dropdown, as well as the
+`Maven default annotation processors profile`
+![](docs/build-qupath/disable-annotation-processing-1.png)
+![](docs/build-qupath/disable-annotation-processing-2.png)
+* File -> Project Structure... -> Modules
+
+  For each module listed, click the `Sources` tab, and ensure each
+  `Language level` dropdown option is set to
+  `8 - Lambdas, type annotations etc.`
+
+![](docs/build-qupath/module-source-language-level.png)
+
+* File -> Project Structure... -> Modules -> Click the `qupath` module
+
+Click the `Dependencies` tab, and add Module Dependencies:
+
+![](docs/build-qupath/add-module-dependencies.png)
+
+Add all `qupath-*` modules, and check them off:
+
+![](docs/build-qupath/module-dependencies.png)
+
+* You should now be able to build the project by going to Build -> Build Project
+(or `Ctrl+F9`), and if there are no issues, you should see the following on the
+bottom left of the `IntelliJ` window:
+
+![](docs/build-qupath/compilation-successful.png)
+
+This means you should now be able to make `QuPath.jar`
+
+* File -> Project Structure... -> Artifacts
+
+![](docs/build-qupath/artifacts-from-modules-with-dependencies.png)
+
+Leave `Module` as `<All Modules>`.
+
+For `Main Class`, browse your file system with the `...` button, click the
+`Project` tab, and select `src/main/java/qupath/QuPath.java`
+
+![](docs/build-qupath/artifacts-select-main-class.png)
+
+Your `Artifacts` screen should look like:
+
+![](docs/build-qupath/artifacts-settings.png)
+
+Note how all the `maven` dependencies (`.m2/repository`) are included in the
+build, which `AnnotationExchangeExtension` will rely on.
+
+Build the artifact by going to Build -> Build Artifacts... -> `qupath` -> Build
+
+![](docs/build-qupath/build-artifact.png)
+
+And the resulting file will be at:
+
+`/path/to/qupath/out/artifacts/qupath/qupath.jar`
+
+We now have the dependencies needed to build `AnnotationExchangeExtension`
