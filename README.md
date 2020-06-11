@@ -103,3 +103,17 @@ A working example can be found below:
 
 In the future, there will be efforts to remove redundant entries, and to improve the overall data structure (i.e.
 transform arrays to hash-tables where it makes sense, and vice versa)
+
+## Building the Extension
+
+The following installations are required to build the
+`AnnotationExchangeExtension.jar` artifact:
+
+1. [Java Development Kit `8u151` (`JDK 1.8.0_151`)](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html)
+(Requires registering for an Oracle account)
+
+2. [Intellij IDEA 2017.3.7 (Community Edition)](https://www.jetbrains.com/idea/download/other.html)
+
+    * Linux: https://download.jetbrains.com/idea/ideaIC-2017.3.7.tar.gz
+    * Windows: https://download.jetbrains.com/idea/ideaIC-2017.3.7.exe
+    * MacOS: https://download.jetbrains.com/idea/ideaIC-2017.3.7.dmg
